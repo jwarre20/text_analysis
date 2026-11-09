@@ -5,6 +5,6 @@ account: j-dub-fantasy24
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 18395619
-bundleId: 12799573
+bundleId: 12800370
 url: https://j-dub-fantasy24.shinyapps.io/adventurers-ledger/
 version: 1

@@ -22,6 +22,161 @@ score_costs <- c(
 
 default_scores <- setNames(c(15, 14, 13, 12, 10, 8), unname(ability_scores))
 
+class_ability_priorities <- list(
+  Barbarian = c("Strength", "Constitution", "Dexterity", "Wisdom", "Charisma", "Intelligence"),
+  Bard = c("Charisma", "Dexterity", "Constitution", "Wisdom", "Intelligence", "Strength"),
+  Cleric = c("Wisdom", "Constitution", "Dexterity", "Strength", "Charisma", "Intelligence"),
+  Druid = c("Wisdom", "Constitution", "Dexterity", "Intelligence", "Charisma", "Strength"),
+  Fighter = c("Strength", "Constitution", "Dexterity", "Wisdom", "Intelligence", "Charisma"),
+  Monk = c("Dexterity", "Wisdom", "Constitution", "Strength", "Intelligence", "Charisma"),
+  Paladin = c("Strength", "Charisma", "Constitution", "Wisdom", "Dexterity", "Intelligence"),
+  Ranger = c("Dexterity", "Wisdom", "Constitution", "Strength", "Intelligence", "Charisma"),
+  Rogue = c("Dexterity", "Constitution", "Wisdom", "Charisma", "Intelligence", "Strength"),
+  Sorcerer = c("Charisma", "Constitution", "Dexterity", "Wisdom", "Intelligence", "Strength"),
+  Warlock = c("Charisma", "Constitution", "Dexterity", "Wisdom", "Intelligence", "Strength"),
+  Wizard = c("Intelligence", "Constitution", "Dexterity", "Wisdom", "Charisma", "Strength")
+)
+
+skill_abilities <- c(
+  "Acrobatics" = "dexterity", "Animal Handling" = "wisdom", "Arcana" = "intelligence",
+  "Athletics" = "strength", "Deception" = "charisma", "History" = "intelligence",
+  "Insight" = "wisdom", "Intimidation" = "charisma", "Investigation" = "intelligence",
+  "Medicine" = "wisdom", "Nature" = "intelligence", "Perception" = "wisdom",
+  "Performance" = "charisma", "Persuasion" = "charisma", "Religion" = "intelligence",
+  "Sleight of Hand" = "dexterity", "Stealth" = "dexterity", "Survival" = "wisdom"
+)
+
+armour_profiles <- list(
+  "No armour" = list(base = 10L, dexterity = Inf, proficiency = "None"),
+  "Mage Armour" = list(base = 13L, dexterity = Inf, proficiency = "None"),
+  "Padded armour" = list(base = 11L, dexterity = Inf, proficiency = "Light"),
+  "Leather armour" = list(base = 11L, dexterity = Inf, proficiency = "Light"),
+  "Studded leather" = list(base = 12L, dexterity = Inf, proficiency = "Light"),
+  "Hide armour" = list(base = 12L, dexterity = 2L, proficiency = "Medium"),
+  "Chain shirt" = list(base = 13L, dexterity = 2L, proficiency = "Medium"),
+  "Scale mail" = list(base = 14L, dexterity = 2L, proficiency = "Medium"),
+  "Breastplate" = list(base = 14L, dexterity = 2L, proficiency = "Medium"),
+  "Half plate" = list(base = 15L, dexterity = 2L, proficiency = "Medium"),
+  "Ring mail" = list(base = 14L, dexterity = 0L, proficiency = "Heavy"),
+  "Chain mail" = list(base = 16L, dexterity = 0L, proficiency = "Heavy"),
+  "Splint armour" = list(base = 17L, dexterity = 0L, proficiency = "Heavy"),
+  "Plate armour" = list(base = 18L, dexterity = 0L, proficiency = "Heavy")
+)
+
+weapon_profiles <- list(
+  "Unarmed Strike" = list(damage = "1", type = "Bludgeoning", ability = "strength", category = "Simple"),
+  "Club" = list(damage = "1d4", type = "Bludgeoning", ability = "strength", category = "Simple"),
+  "Dagger" = list(damage = "1d4", type = "Piercing", ability = "finesse", category = "Simple"),
+  "Greatclub" = list(damage = "1d8", type = "Bludgeoning", ability = "strength", category = "Simple"),
+  "Handaxe" = list(damage = "1d6", type = "Slashing", ability = "strength", category = "Simple"),
+  "Javelin" = list(damage = "1d6", type = "Piercing", ability = "strength", category = "Simple"),
+  "Light Crossbow" = list(damage = "1d8", type = "Piercing", ability = "dexterity", category = "Simple"),
+  "Light Hammer" = list(damage = "1d4", type = "Bludgeoning", ability = "strength", category = "Simple"),
+  "Mace" = list(damage = "1d6", type = "Bludgeoning", ability = "strength", category = "Simple"),
+  "Quarterstaff" = list(damage = "1d6", type = "Bludgeoning", ability = "strength", category = "Simple"),
+  "Shortbow" = list(damage = "1d6", type = "Piercing", ability = "dexterity", category = "Simple"),
+  "Sickle" = list(damage = "1d4", type = "Slashing", ability = "strength", category = "Simple"),
+  "Spear" = list(damage = "1d6", type = "Piercing", ability = "strength", category = "Simple"),
+  "Battleaxe" = list(damage = "1d8", type = "Slashing", ability = "strength", category = "Martial"),
+  "Flail" = list(damage = "1d8", type = "Bludgeoning", ability = "strength", category = "Martial"),
+  "Glaive" = list(damage = "1d10", type = "Slashing", ability = "strength", category = "Martial"),
+  "Greataxe" = list(damage = "1d12", type = "Slashing", ability = "strength", category = "Martial"),
+  "Greatsword" = list(damage = "2d6", type = "Slashing", ability = "strength", category = "Martial"),
+  "Halberd" = list(damage = "1d10", type = "Slashing", ability = "strength", category = "Martial"),
+  "Lance" = list(damage = "1d10", type = "Piercing", ability = "strength", category = "Martial"),
+  "Longbow" = list(damage = "1d8", type = "Piercing", ability = "dexterity", category = "Martial"),
+  "Longsword" = list(damage = "1d8", type = "Slashing", ability = "strength", category = "Martial"),
+  "Maul" = list(damage = "2d6", type = "Bludgeoning", ability = "strength", category = "Martial"),
+  "Morningstar" = list(damage = "1d8", type = "Piercing", ability = "strength", category = "Martial"),
+  "Pike" = list(damage = "1d10", type = "Piercing", ability = "strength", category = "Martial"),
+  "Rapier" = list(damage = "1d8", type = "Piercing", ability = "finesse", category = "Martial"),
+  "Scimitar" = list(damage = "1d6", type = "Slashing", ability = "finesse", category = "Martial"),
+  "Shortsword" = list(damage = "1d6", type = "Piercing", ability = "finesse", category = "Martial"),
+  "Trident" = list(damage = "1d8", type = "Piercing", ability = "strength", category = "Martial"),
+  "War Pick" = list(damage = "1d8", type = "Piercing", ability = "strength", category = "Martial"),
+  "Warhammer" = list(damage = "1d8", type = "Bludgeoning", ability = "strength", category = "Martial"),
+  "Whip" = list(damage = "1d4", type = "Slashing", ability = "finesse", category = "Martial"),
+  "Hand Crossbow" = list(damage = "1d6", type = "Piercing", ability = "dexterity", category = "Martial"),
+  "Heavy Crossbow" = list(damage = "1d10", type = "Piercing", ability = "dexterity", category = "Martial")
+)
+
+class_starting_weapons <- c(
+  Barbarian = "Greataxe", Bard = "Rapier", Cleric = "Mace", Druid = "Quarterstaff",
+  Fighter = "Longsword", Monk = "Quarterstaff", Paladin = "Longsword",
+  Ranger = "Longbow", Rogue = "Rapier", Sorcerer = "Dagger",
+  Warlock = "Dagger", Wizard = "Quarterstaff"
+)
+
+class_starting_armour <- c(
+  Barbarian = "No armour", Bard = "Leather armour", Cleric = "Chain shirt",
+  Druid = "Leather armour", Fighter = "Chain mail", Monk = "No armour",
+  Paladin = "Chain mail", Ranger = "Leather armour", Rogue = "Leather armour",
+  Sorcerer = "No armour", Warlock = "Leather armour", Wizard = "No armour"
+)
+
+weapon_properties <- c(
+  "Unarmed Strike" = "Melee, 5 ft.",
+  "Club" = "Light, 5 ft.",
+  "Dagger" = "Finesse, Light, Thrown (20/60 ft.), 5 ft.",
+  "Greatclub" = "Two-Handed, 5 ft.",
+  "Handaxe" = "Light, Thrown (20/60 ft.), 5 ft.",
+  "Javelin" = "Thrown (30/120 ft.), 5 ft.",
+  "Light Crossbow" = "Ammunition (80/320 ft.), Loading, Two-Handed",
+  "Light Hammer" = "Light, Thrown (20/60 ft.), 5 ft.",
+  "Mace" = "5 ft.",
+  "Quarterstaff" = "Versatile, 5 ft.",
+  "Shortbow" = "Ammunition (80/320 ft.), Two-Handed",
+  "Sickle" = "Light, 5 ft.",
+  "Spear" = "Thrown (20/60 ft.), Versatile, 5 ft.",
+  "Battleaxe" = "Versatile, 5 ft.",
+  "Flail" = "5 ft.",
+  "Glaive" = "Heavy, Reach, Two-Handed, 10 ft.",
+  "Greataxe" = "Heavy, Two-Handed, 5 ft.",
+  "Greatsword" = "Heavy, Two-Handed, 5 ft.",
+  "Halberd" = "Heavy, Reach, Two-Handed, 10 ft.",
+  "Lance" = "Reach, 10 ft.",
+  "Longbow" = "Ammunition (150/600 ft.), Heavy, Two-Handed",
+  "Longsword" = "Versatile, 5 ft.",
+  "Maul" = "Heavy, Two-Handed, 5 ft.",
+  "Morningstar" = "5 ft.",
+  "Pike" = "Heavy, Reach, Two-Handed, 10 ft.",
+  "Rapier" = "Finesse, 5 ft.",
+  "Scimitar" = "Finesse, Light, 5 ft.",
+  "Shortsword" = "Finesse, Light, 5 ft.",
+  "Trident" = "Thrown (20/60 ft.), Versatile, 5 ft.",
+  "War Pick" = "5 ft.",
+  "Warhammer" = "Versatile, 5 ft.",
+  "Whip" = "Finesse, Reach, 10 ft.",
+  "Hand Crossbow" = "Ammunition (30/120 ft.), Light, Loading",
+  "Heavy Crossbow" = "Ammunition (100/400 ft.), Heavy, Loading, Two-Handed"
+)
+
+weapon_proficiency_exceptions <- list(
+  Bard = c("Hand Crossbow", "Longsword", "Rapier", "Shortsword"),
+  Monk = "Shortsword",
+  Rogue = c("Hand Crossbow", "Longsword", "Rapier", "Shortsword")
+)
+
+class_martial_weapon_proficiency <- c(
+  Barbarian = TRUE, Bard = FALSE, Cleric = FALSE, Druid = FALSE,
+  Fighter = TRUE, Monk = FALSE, Paladin = TRUE, Ranger = TRUE,
+  Rogue = FALSE, Sorcerer = FALSE, Warlock = FALSE, Wizard = FALSE
+)
+
+class_limited_weapons <- list(
+  Sorcerer = c("Dagger", "Dart", "Sling", "Quarterstaff", "Light Crossbow"),
+  Wizard = c("Dagger", "Dart", "Sling", "Quarterstaff", "Light Crossbow")
+)
+
+ability_score_effects <- c(
+  Strength = "Melee attacks and damage with Strength weapons, Athletics, and Strength saves.",
+  Dexterity = "Initiative, many ranged and finesse attacks, AC in light or medium armour, Acrobatics, Sleight of Hand, Stealth, and Dexterity saves.",
+  Constitution = "Hit points and Constitution saves. Concentration checks use Constitution when you take damage while maintaining a spell.",
+  Intelligence = "Arcana, History, Investigation, Nature, Religion, and Intelligence saves. Wizards use it for their spells.",
+  Wisdom = "Perception, Insight, Survival, Animal Handling, Medicine, and Wisdom saves. Clerics, Druids, and Rangers use it for their spells.",
+  Charisma = "Persuasion, Deception, Intimidation, Performance, and Charisma saves. Bards, Paladins, Sorcerers, and Warlocks use it for their spells."
+)
+
 race_descriptions <- c(
   "Human" = "Ambitious and adaptable, humans make their mark in every corner of the world.",
   "Elf" = "Graceful and long-lived, elves carry the memory of ancient forests and lost ages.",
@@ -29,19 +184,120 @@ race_descriptions <- c(
   "Halfling" = "Small, resourceful, and courageous, halflings find comfort and wonder wherever they roam.",
   "Gnome" = "Curious and inventive, gnomes meet the world's mysteries with bright ideas and bigger questions.",
   "Dragonborn" = "Proud descendants of dragons, dragonborn bear a striking presence and a storied legacy.",
-  "Orc" = "Resilient and formidable, orcs forge their own place through strength, kinship, and resolve.",
+  "Half-Elf" = "A blend of human ambition and elven heritage, at home in more than one world.",
+  "Half-Orc" = "Marked by formidable strength and fierce resolve, forged between two worlds.",
   "Tiefling" = "Marked by an infernal heritage, tieflings navigate a world that often judges by appearances."
 )
 
-species_traits <- list(
-  Human = "Resourceful: gain Heroic Inspiration after a Long Rest; Skillful: gain one skill proficiency; Versatile: gain one Origin feat.",
-  Elf = "Darkvision 60 ft.; Fey Ancestry grants advantage against Charmed; Keen Senses grants Perception proficiency; choose a Drow, High Elf, or Wood Elf lineage.",
-  Dwarf = "Darkvision 120 ft.; Dwarven Resilience grants poison resistance and save advantage; Dwarven Toughness adds 1 HP per level; Stonecunning grants tremorsense briefly.",
-  Halfling = "Brave grants advantage against Frightened; Halfling Nimbleness lets you move through larger creatures; Luck lets you reroll a 1 on a d20 Test; Naturally Stealthy helps you hide.",
-  Gnome = "Darkvision 60 ft.; Gnomish Cunning grants advantage on Intelligence, Wisdom, and Charisma saves; choose Forest or Rock Gnome lineage.",
-  Dragonborn = "Choose a Draconic Ancestry to determine damage resistance and Breath Weapon damage; Darkvision 60 ft.; gain limited Flight at level 5.",
-  Orc = "Adrenaline Rush lets you Dash and gain temporary HP; Darkvision 120 ft.; Relentless Endurance can keep you standing once per Long Rest.",
-  Tiefling = "Darkvision 60 ft.; choose Abyssal, Chthonic, or Infernal Legacy, which grants resistance and lineage magic."
+race_subraces <- list(
+  Human = c("Human", "Variant Human"),
+  Elf = c("High Elf", "Wood Elf", "Drow"),
+  Dwarf = c("Hill Dwarf", "Mountain Dwarf"),
+  Halfling = c("Lightfoot Halfling", "Stout Halfling"),
+  Gnome = c("Forest Gnome", "Rock Gnome"),
+  Dragonborn = "Dragonborn",
+  `Half-Elf` = "Half-Elf",
+  `Half-Orc` = "Half-Orc",
+  Tiefling = "Tiefling"
+)
+
+race_subrace_rules <- list(
+  Human = list(
+    Human = list(bonuses = setNames(rep(1L, 6L), unname(ability_scores)),
+      traits = c("Medium size", "30-foot walking speed", "Common and one language of your choice")),
+    `Variant Human` = list(bonuses = integer(),
+      traits = c("Medium size", "30-foot walking speed", "Common and one language of your choice",
+        "One skill proficiency", "One feat of your choice"))
+  ),
+  Elf = list(
+    `High Elf` = list(bonuses = c(dexterity = 2L, intelligence = 1L), speed = 30L,
+      traits = c("Medium size", "Darkvision 60 ft.", "Common and Elvish",
+        "Keen Senses: Perception proficiency",
+        "Fey Ancestry", "Trance", "Elf Weapon Training", "One wizard cantrip")),
+    `Wood Elf` = list(bonuses = c(dexterity = 2L, wisdom = 1L), speed = 35L,
+      traits = c("Medium size", "Darkvision 60 ft.", "Common and Elvish",
+        "Keen Senses: Perception proficiency",
+        "Fey Ancestry", "Trance", "Elf Weapon Training", "Mask of the Wild")),
+    Drow = list(bonuses = c(dexterity = 2L, charisma = 1L), speed = 30L,
+      traits = c("Medium size", "Darkvision 120 ft.", "Common and Elvish",
+        "Keen Senses: Perception proficiency",
+        "Fey Ancestry", "Trance", "Drow Weapon Training", "Sunlight Sensitivity",
+        "Drow Magic: Dancing Lights; Faerie Fire and Darkness at higher levels"))
+  ),
+  Dwarf = list(
+    `Hill Dwarf` = list(bonuses = c(constitution = 2L, wisdom = 1L), speed = 25L,
+      traits = c("Medium size", "Darkvision 60 ft.", "Common and Dwarvish",
+        "Dwarven Resilience", "Dwarven speed is not reduced by heavy armour",
+        "Dwarven Combat Training", "Tool Proficiency", "Stonecunning",
+        "Dwarven Toughness: +1 maximum HP per level")),
+    `Mountain Dwarf` = list(bonuses = c(constitution = 2L, strength = 2L), speed = 25L,
+      traits = c("Medium size", "Darkvision 60 ft.", "Common and Dwarvish",
+        "Dwarven Resilience", "Dwarven speed is not reduced by heavy armour",
+        "Dwarven Combat Training", "Tool Proficiency", "Stonecunning",
+        "Dwarven Armour Training: light and medium armour"))
+  ),
+  Halfling = list(
+    `Lightfoot Halfling` = list(bonuses = c(dexterity = 2L, charisma = 1L), speed = 25L,
+      traits = c("Small size", "Common and Halfling", "Lucky", "Brave",
+        "Halfling Nimbleness", "Naturally Stealthy")),
+    `Stout Halfling` = list(bonuses = c(dexterity = 2L, constitution = 1L), speed = 25L,
+      traits = c("Small size", "Common and Halfling", "Lucky", "Brave",
+        "Halfling Nimbleness",
+        "Stout Resilience: advantage against poison and resistance to poison damage"))
+  ),
+  Gnome = list(
+    `Forest Gnome` = list(bonuses = c(intelligence = 2L, dexterity = 1L), speed = 25L,
+      traits = c("Small size", "Common and Gnomish", "Darkvision 60 ft.", "Gnome Cunning",
+        "Natural Illusionist: Minor Illusion", "Speak with Small Beasts")),
+    `Rock Gnome` = list(bonuses = c(intelligence = 2L, constitution = 1L), speed = 25L,
+      traits = c("Small size", "Common and Gnomish", "Darkvision 60 ft.", "Gnome Cunning",
+        "Artificer's Lore", "Tinker"))
+  ),
+  Dragonborn = list(
+    Dragonborn = list(bonuses = c(strength = 2L, charisma = 1L), speed = 30L,
+      traits = c("Medium size", "Common and Draconic", "Draconic Ancestry", "Breath Weapon",
+        "Resistance to damage matching your Draconic Ancestry"))
+  ),
+  `Half-Elf` = list(
+    `Half-Elf` = list(bonuses = c(charisma = 2L), speed = 30L,
+      traits = c("Medium size", "Darkvision 60 ft.", "Fey Ancestry",
+        "Skill Versatility: proficiency in two skills", "Common, Elvish and one language of your choice"))
+  ),
+  `Half-Orc` = list(
+    `Half-Orc` = list(bonuses = c(strength = 2L, constitution = 1L), speed = 30L,
+      traits = c("Medium size", "Common and Orc", "Darkvision 60 ft.",
+        "Menacing: Intimidation proficiency",
+        "Relentless Endurance", "Savage Attacks"))
+  ),
+  Tiefling = list(
+    Tiefling = list(bonuses = c(intelligence = 1L, charisma = 2L), speed = 30L,
+      traits = c("Medium size", "Common and Infernal", "Darkvision 60 ft.", "Hellish Resistance",
+        "Infernal Legacy: Thaumaturgy; Hellish Rebuke and Darkness at higher levels",
+        "Common and Infernal"))
+  )
+)
+
+draconic_ancestry <- c(
+  Black = "Acid", Blue = "Lightning", Brass = "Fire", Bronze = "Lightning",
+  Copper = "Acid", Gold = "Fire", Green = "Poison", Red = "Fire",
+  Silver = "Cold", White = "Cold"
+)
+
+race_language_choices <- c("Dwarvish", "Elvish", "Giant", "Gnomish", "Goblin",
+  "Halfling", "Orc", "Sylvan", "Undercommon", "Abyssal", "Celestial",
+  "Draconic", "Infernal", "Primordial", "Deep Speech", "Druidic",
+  "Thieves' Cant")
+
+phb_feats <- c(
+  "Alert", "Athlete", "Actor", "Charger", "Crossbow Expert", "Defensive Duelist",
+  "Dual Wielder", "Dungeon Delver", "Durable", "Elemental Adept", "Grappler",
+  "Great Weapon Master", "Healer", "Heavily Armoured", "Heavy Armour Master",
+  "Inspiring Leader", "Keen Mind", "Lightly Armoured", "Linguist", "Lucky",
+  "Mage Slayer", "Magic Initiate", "Martial Adept", "Medium Armour Master",
+  "Mobile", "Moderately Armoured", "Mounted Combatant", "Observant",
+  "Polearm Master", "Resilient", "Ritual Caster", "Savage Attacker",
+  "Sentinel", "Sharpshooter", "Shield Master", "Skilled", "Skulker",
+  "Spell Sniper", "Tavern Brawler", "Tough", "War Caster", "Weapon Master"
 )
 
 class_descriptions <- c(
@@ -52,7 +308,7 @@ class_descriptions <- c(
   "Fighter" = "A disciplined master of weapons, tactics, and the art of battle.",
   "Monk" = "A swift martial artist who hones body and spirit into one.",
   "Paladin" = "A sworn protector whose oath fuels courage and magic.",
-  "Ranger" = "A skilled wanderer and hunter at home on the edges of civilization.",
+  "Ranger" = "A skilled wanderer and hunter at home on the edges of civilisation.",
   "Rogue" = "A resourceful expert in stealth, precision, and cunning.",
   "Sorcerer" = "A natural spellcaster whose magic comes from within.",
   "Warlock" = "A wielder of strange magic granted through a powerful pact.",
@@ -61,100 +317,111 @@ class_descriptions <- c(
 
 class_rules <- list(
   Barbarian = list(saves = c("Strength", "Constitution"), hit_die = 12L, slots = 0L,
-    features = c("Rage", "Unarmored Defense", "Weapon Mastery")),
+    features = c("Rage", "Unarmored Defense")),
   Bard = list(saves = c("Dexterity", "Charisma"), hit_die = 8L, slots = 2L,
     features = c("Bardic Inspiration", "Spellcasting")),
   Cleric = list(saves = c("Wisdom", "Charisma"), hit_die = 8L, slots = 2L,
-    features = c("Spellcasting", "Divine Order")),
+    features = c("Spellcasting", "Divine Domain")),
   Druid = list(saves = c("Intelligence", "Wisdom"), hit_die = 8L, slots = 2L,
-    features = c("Spellcasting", "Druidic", "Primal Order")),
+    features = c("Druidic", "Spellcasting")),
   Fighter = list(saves = c("Strength", "Constitution"), hit_die = 10L, slots = 0L,
-    features = c("Fighting Style", "Second Wind", "Weapon Mastery")),
+    features = c("Fighting Style", "Second Wind")),
   Monk = list(saves = c("Strength", "Dexterity"), hit_die = 8L, slots = 0L,
-    features = c("Martial Arts", "Unarmored Defense", "Weapon Mastery")),
-  Paladin = list(saves = c("Wisdom", "Charisma"), hit_die = 10L, slots = 2L,
-    features = c("Lay on Hands", "Spellcasting", "Weapon Mastery")),
-  Ranger = list(saves = c("Strength", "Dexterity"), hit_die = 10L, slots = 2L,
-    features = c("Favored Enemy", "Spellcasting", "Weapon Mastery")),
+    features = c("Unarmored Defense", "Martial Arts")),
+  Paladin = list(saves = c("Wisdom", "Charisma"), hit_die = 10L, slots = 0L,
+    features = c("Divine Sense", "Lay on Hands")),
+  Ranger = list(saves = c("Strength", "Dexterity"), hit_die = 10L, slots = 0L,
+    features = c("Favored Enemy", "Natural Explorer")),
   Rogue = list(saves = c("Dexterity", "Intelligence"), hit_die = 8L, slots = 0L,
-    features = c("Expertise", "Sneak Attack", "Thieves' Cant", "Weapon Mastery")),
+    features = c("Expertise", "Sneak Attack", "Thieves' Cant")),
   Sorcerer = list(saves = c("Constitution", "Charisma"), hit_die = 6L, slots = 2L,
-    features = c("Spellcasting", "Innate Sorcery")),
+    features = c("Spellcasting", "Sorcerous Origin")),
   Warlock = list(saves = c("Wisdom", "Charisma"), hit_die = 8L, slots = 1L,
-    features = c("Eldritch Invocations", "Pact Magic")),
+    features = c("Otherworldly Patron", "Pact Magic")),
   Wizard = list(saves = c("Intelligence", "Wisdom"), hit_die = 6L, slots = 2L,
-    features = c("Spellcasting", "Ritual Adept", "Arcane Recovery"))
+    features = c("Spellcasting", "Arcane Recovery"))
 )
 
 background_descriptions <- c(
-  "Acolyte" = "You served a temple and learned its rites, traditions, and sacred duties.",
-  "Artisan" = "You trained in a craft and know the discipline of making useful things.",
-  "Charlatan" = "You learned to read people and survive through quick talk and misdirection.",
-  "Criminal" = "You built a life outside the law, relying on stealth and underworld contacts.",
-  "Entertainer" = "You earned a living by captivating crowds with a practiced performance.",
-  "Farmer" = "You worked the land, endured hard seasons, and learned to care for animals.",
-  "Guard" = "You kept watch over a settlement and learned to recognize danger.",
-  "Guide" = "You led travelers through wild places and learned to move unseen.",
-  "Hermit" = "You lived apart from society, tending to simple needs and quiet study.",
-  "Merchant" = "You traded goods, judged a bargain, and learned the value of a good route.",
-  "Noble" = "You were raised among privilege, family histories, and social expectations.",
-  "Sage" = "You devoted years to books, research, and the pursuit of knowledge.",
-  "Sailor" = "You worked aboard a vessel and learned to trust your balance and crew.",
-  "Scribe" = "You copied, organized, or preserved written records and correspondence.",
-  "Soldier" = "You trained for battle and served as part of a military force.",
-  "Wayfarer" = "You traveled from place to place, relying on your instincts and adaptability."
+  "Acolyte" = "You served a temple or shrine and know its rites and community.",
+  "Charlatan" = "You survived by deception, disguise, and reading your marks.",
+  "Criminal" = "You have underworld contacts and experience outside the law.",
+  "Entertainer" = "You earn your living by captivating audiences.",
+  "Folk Hero" = "You are celebrated locally for defending ordinary people.",
+  "Guild Artisan" = "You trained in a craft and belong to a professional guild.",
+  "Hermit" = "You lived in seclusion and made a discovery during that time.",
+  "Noble" = "You were raised among privilege, family histories, and social duties.",
+  "Outlander" = "You grew up in the wilds and can travel and forage there.",
+  "Sage" = "You spent years studying and researching.",
+  "Sailor" = "You worked aboard a vessel and know life at sea.",
+  "Soldier" = "You trained and served in a military organisation.",
+  "Urchin" = "You grew up on the streets and learned to survive there."
 )
 
 background_rules <- list(
-  Acolyte = list(abilities = c("Intelligence", "Wisdom", "Charisma"),
-    skills = c("Insight", "Religion"), tool = "Calligrapher's Supplies",
-    feat = "Magic Initiate (Cleric)", equipment = "Calligrapher's Supplies, a book of prayers, and 8 GP."),
-  Artisan = list(abilities = c("Strength", "Dexterity", "Intelligence"),
-    skills = c("Investigation", "Persuasion"), tool = "One Artisan's Tool of your choice",
-    feat = "Crafter", equipment = "Artisan's Tools of your choice and 32 GP."),
-  Charlatan = list(abilities = c("Dexterity", "Constitution", "Charisma"),
-    skills = c("Deception", "Sleight of Hand"), tool = "Forgery Kit",
-    feat = "Skilled", equipment = "Forgery Kit, fine clothes, and 15 GP."),
-  Criminal = list(abilities = c("Dexterity", "Constitution", "Intelligence"),
-    skills = c("Sleight of Hand", "Stealth"), tool = "Thieves' Tools",
-    feat = "Alert", equipment = "Thieves' Tools, 2 Daggers, and 16 GP."),
-  Entertainer = list(abilities = c("Strength", "Dexterity", "Charisma"),
-    skills = c("Acrobatics", "Performance"), tool = "One Musical Instrument of your choice",
-    feat = "Musician", equipment = "Musical Instrument of your choice, 2 Costumes, and 11 GP."),
-  Farmer = list(abilities = c("Strength", "Constitution", "Wisdom"),
-    skills = c("Animal Handling", "Nature"), tool = "Carpenter's Tools",
-    feat = "Tough", equipment = "Carpenter's Tools, a shovel, an iron pot, and 30 GP."),
-  Guard = list(abilities = c("Strength", "Intelligence", "Wisdom"),
-    skills = c("Athletics", "Perception"), tool = "Gaming Set",
-    feat = "Alert", equipment = "Spear, a Gaming Set, uniform, and 12 GP."),
-  Guide = list(abilities = c("Dexterity", "Constitution", "Wisdom"),
-    skills = c("Stealth", "Survival"), tool = "Cartographer's Tools",
-    feat = "Magic Initiate (Druid)", equipment = "Cartographer's Tools, bedroll, and 3 GP."),
-  Hermit = list(abilities = c("Constitution", "Wisdom", "Charisma"),
-    skills = c("Medicine", "Religion"), tool = "Herbalism Kit",
-    feat = "Healer", equipment = "Herbalism Kit, a book, and 16 GP."),
-  Merchant = list(abilities = c("Constitution", "Intelligence", "Charisma"),
-    skills = c("Animal Handling", "Persuasion"), tool = "Navigator's Tools",
-    feat = "Lucky", equipment = "Navigator's Tools, 2 Pouches, and 22 GP."),
-  Noble = list(abilities = c("Strength", "Intelligence", "Charisma"),
-    skills = c("History", "Persuasion"), tool = "Gaming Set",
-    feat = "Skilled", equipment = "Fine Clothes, a Gaming Set, perfume, and 29 GP."),
-  Sage = list(abilities = c("Constitution", "Intelligence", "Wisdom"),
-    skills = c("Arcana", "History"), tool = "Calligrapher's Supplies",
-    feat = "Magic Initiate (Wizard)", equipment = "Calligrapher's Supplies, a book, and 8 GP."),
-  Sailor = list(abilities = c("Strength", "Dexterity", "Wisdom"),
-    skills = c("Acrobatics", "Perception"), tool = "Navigator's Tools",
-    feat = "Tavern Brawler", equipment = "Navigator's Tools, rope, and 20 GP."),
-  Scribe = list(abilities = c("Dexterity", "Intelligence", "Wisdom"),
-    skills = c("Investigation", "Perception"), tool = "Calligrapher's Supplies",
-    feat = "Skilled", equipment = "Calligrapher's Supplies, a book, and 23 GP."),
-  Soldier = list(abilities = c("Strength", "Dexterity", "Constitution"),
-    skills = c("Athletics", "Intimidation"), tool = "Gaming Set",
-    feat = "Savage Attacker", equipment = "Gaming Set, Healer's Kit, uniform, and 14 GP."),
-  Wayfarer = list(abilities = c("Dexterity", "Wisdom", "Charisma"),
-    skills = c("Insight", "Stealth"), tool = "Thieves' Tools",
-    feat = "Lucky", equipment = "Thieves' Tools, 2 Pouches, and 16 GP.")
+  Acolyte = list(skills = c("Insight", "Religion"), tool = "None",
+    languages = "Two of your choice", feature = "Shelter of the Faithful",
+    equipment = "Holy symbol, prayer book or prayer wheel, 5 sticks of incense, vestments, common clothes, and 15 GP."),
+  Charlatan = list(skills = c("Deception", "Sleight of Hand"), tool = "Disguise Kit and Forgery Kit",
+    languages = "None", feature = "False Identity",
+    equipment = "Fine clothes, disguise kit, tools of your chosen con, and 15 GP."),
+  Criminal = list(skills = c("Deception", "Stealth"), tool = "One gaming set and Thieves' Tools",
+    languages = "None", feature = "Criminal Contact",
+    equipment = "Crowbar, dark common clothes with a hood, and 15 GP."),
+  Entertainer = list(skills = c("Acrobatics", "Performance"), tool = "Disguise Kit and one musical instrument",
+    languages = "None", feature = "By Popular Demand",
+    equipment = "Musical instrument, favour of an admirer, costume, and 15 GP."),
+  `Folk Hero` = list(skills = c("Animal Handling", "Survival"), tool = "One artisan's tool and land vehicles",
+    languages = "None", feature = "Rustic Hospitality",
+    equipment = "One artisan's tool, shovel, iron pot, common clothes, and 10 GP."),
+  `Guild Artisan` = list(skills = c("Insight", "Persuasion"), tool = "One artisan's tool",
+    languages = "One of your choice", feature = "Guild Membership",
+    equipment = "One artisan's tool, a letter of introduction, traveller's clothes, and 15 GP."),
+  Hermit = list(skills = c("Medicine", "Religion"), tool = "Herbalism Kit",
+    languages = "One of your choice", feature = "Discovery",
+    equipment = "Scroll case with notes, winter blanket, common clothes, herbalism kit, and 5 GP."),
+  Noble = list(skills = c("History", "Persuasion"), tool = "One gaming set",
+    languages = "One of your choice", feature = "Position of Privilege",
+    equipment = "Fine clothes, signet ring, scroll of pedigree, and 25 GP."),
+  Outlander = list(skills = c("Athletics", "Survival"), tool = "One musical instrument",
+    languages = "One of your choice", feature = "Wanderer",
+    equipment = "Staff, hunting trap, trophy from an animal, traveller's clothes, and 10 GP."),
+  Sage = list(skills = c("Arcana", "History"), tool = "None",
+    languages = "Two of your choice", feature = "Researcher",
+    equipment = "Bottle of ink, quill, small knife, letter from a dead colleague, common clothes, and 10 GP."),
+  Sailor = list(skills = c("Athletics", "Perception"), tool = "Navigator's Tools and water vehicles",
+    languages = "None", feature = "Ship's Passage",
+    equipment = "Belaying pin (club), silk rope, lucky charm, common clothes, and 10 GP."),
+  Soldier = list(skills = c("Athletics", "Intimidation"), tool = "One gaming set and land vehicles",
+    languages = "None", feature = "Military Rank",
+    equipment = "Insignia of rank, trophy from a fallen enemy, gaming set, common clothes, and 10 GP."),
+  Urchin = list(skills = c("Sleight of Hand", "Stealth"), tool = "Disguise Kit and Thieves' Tools",
+    languages = "None", feature = "City Secrets",
+    equipment = "Small knife, map of your home city, pet mouse, token of your parents, common clothes, and 10 GP.")
 )
+
+background_choice_rules <- list(
+  Acolyte = list(languages = 2L),
+  Charlatan = list(con_tools = TRUE),
+  Criminal = list(gaming_set = TRUE),
+  Entertainer = list(instrument = TRUE),
+  `Folk Hero` = list(artisan_tool = TRUE),
+  `Guild Artisan` = list(artisan_tool = TRUE, languages = 1L),
+  Hermit = list(languages = 1L),
+  Noble = list(gaming_set = TRUE, languages = 1L),
+  Outlander = list(instrument = TRUE, languages = 1L),
+  Sage = list(languages = 2L),
+  Soldier = list(gaming_set = TRUE)
+)
+
+artisan_tools <- c("Alchemist's Supplies", "Brewer's Supplies", "Calligrapher's Supplies",
+  "Carpenter's Tools", "Cartographer's Tools", "Cobbler's Tools", "Cook's Utensils",
+  "Glassblower's Tools", "Jeweller's Tools", "Leatherworker's Tools", "Mason's Tools",
+  "Painter's Supplies", "Potter's Tools", "Smith's Tools", "Tinker's Tools",
+  "Weaver's Tools", "Woodcarver's Tools")
+gaming_sets <- c("Dice Set", "Dragonchess Set", "Playing Card Set", "Three-Dragon Ante Set")
+musical_instruments <- c("Bagpipes", "Drum", "Dulcimer", "Flute", "Lute", "Lyre",
+  "Horn", "Pan Flute", "Shawm", "Viol")
 
 skill_choices <- list(
   Barbarian = c("Animal Handling", "Athletics", "Intimidation", "Nature", "Perception", "Survival"),
@@ -184,7 +451,7 @@ skill_counts <- c(
 )
 
 skill_descriptions <- c(
-  "Acrobatics" = "Keep your balance, tumble, or perform agile physical maneuvers.",
+  "Acrobatics" = "Keep your balance, tumble, or perform agile physical manoeuvres.",
   "Animal Handling" = "Calm, guide, or intuit the intentions of animals.",
   "Arcana" = "Recall knowledge about magic, spells, and otherworldly forces.",
   "Athletics" = "Climb, jump, swim, or overcome obstacles through physical force.",
@@ -304,42 +571,42 @@ spell_mechanics <- c(
   "Message" = "No roll. Range 120 ft.; send a short whispered message and receive a quiet reply.",
   "Minor Illusion" = "No roll. Range 30 ft.; make a small image or sound that lasts up to 1 minute.",
   "Prestidigitation" = "No roll. Range 10 ft.; create a minor magical effect, such as a harmless sensory effect or cleaning an object.",
-  "Vicious Mockery" = "Wisdom save (DC {dc}); 1d6 psychic damage on a failure, and the target has disadvantage on its next attack roll.",
+  "Vicious Mockery" = "Wisdom save (DC {dc}); 1d4 psychic damage on a failure and disadvantage on the target's next attack roll.",
   "Guidance" = "No attack roll. Touch a creature; it adds 1d4 to one ability check before the spell ends (concentration, up to 1 minute).",
   "Sacred Flame" = "Dexterity save (DC {dc}); 1d8 radiant damage on a failure. Range 60 ft.",
   "Spare the Dying" = "No roll. Touch a creature with 0 HP to stabilize it.",
   "Thaumaturgy" = "No roll. Range 30 ft.; create a brief supernatural sign or sensory effect.",
   "Druidcraft" = "No roll. Range 30 ft.; create a minor nature effect or predict local weather.",
   "Produce Flame" = "Ranged spell attack ({attack}); 1d8 fire damage on a hit. Range 30 ft.; the flame can also provide light.",
-  "Shillelagh" = "No separate attack roll. For 1 minute, use your spellcasting ability for attacks with the enchanted club or quarterstaff; its damage die becomes a d8.",
+  "Shillelagh" = "For 1 minute, your club or quarterstaff uses your spellcasting ability for attack and damage rolls, deals 1d8 damage, and counts as magical.",
   "Thorn Whip" = "Melee spell attack ({attack}); 1d6 piercing damage on a hit, and pull a Large or smaller target up to 10 ft. Range 30 ft.",
   "Fire Bolt" = "Ranged spell attack ({attack}); 1d10 fire damage on a hit. Range 120 ft.",
   "Ray of Frost" = "Ranged spell attack ({attack}); 1d8 cold damage on a hit and reduce the target's Speed by 10 ft. Range 60 ft.",
   "Shocking Grasp" = "Melee spell attack ({attack}); 1d8 lightning damage on a hit. The target cannot take reactions until its next turn.",
-  "Chill Touch" = "Melee spell attack ({attack}); 1d10 Necrotic damage on a hit, and the target cannot regain HP until the end of your next turn. Touch range.",
+  "Chill Touch" = "Ranged spell attack ({attack}); 1d8 necrotic damage on a hit, and the target cannot regain HP until your next turn. Undead also have disadvantage on attacks against you. Range 120 ft.",
   "Eldritch Blast" = "Ranged spell attack ({attack}); 1d10 force damage on a hit. Range 120 ft.",
-  "True Strike" = "Make a weapon attack using your spellcasting ability for the attack and damage rolls. On a hit, choose the weapon's normal damage type or Radiant; no extra damage die at level 1.",
+  "True Strike" = "Choose a creature within 30 ft.; you gain advantage on your first attack against it on your next turn (concentration, up to 1 round).",
   "Charm Person" = "Wisdom save (DC {dc}); on a failure, a Humanoid is Friendly and Charmed for up to 1 hour. The effect ends early if you or your allies damage it; it has advantage on the save if you are fighting it.",
-  "Dissonant Whispers" = "Wisdom save (DC {dc}); 3d6 psychic damage on a failure, and the target uses its Reaction to move away. Half damage on a success.",
+  "Dissonant Whispers" = "Wisdom save (DC {dc}); on a failure, take 3d6 psychic damage and use your reaction to move away. No damage on a success.",
   "Faerie Fire" = "Dexterity save (DC {dc}); creatures in a 20-ft. cube are outlined, granting advantage on attacks against them (concentration, up to 1 minute).",
-  "Healing Word" = "No roll. Range 60 ft.; a creature regains 2d4 {modifier} HP.",
-  "Sleep" = "Wisdom save (DC {dc}); on a failure, a creature in the 5-ft. Sphere becomes Unconscious for up to 1 minute. It repeats the save at the end of each turn; damage or being shaken awake also ends the effect.",
+  "Healing Word" = "No roll. Range 60 ft.; a creature regains 1d4 + {modifier} HP.",
+  "Sleep" = "Range 90 ft. Roll 5d8; creatures in a 20-ft. radius fall unconscious in ascending current-HP order until the total is used. The effect lasts 1 minute and ends early for a creature that takes damage or is woken.",
   "Thunderwave" = "Constitution save (DC {dc}); 2d8 thunder damage and push 10 ft. on a failure; half damage on a success. 15-ft. cube.",
   "Bless" = "No roll. Up to 3 creatures add 1d4 to attack rolls and saving throws (concentration, up to 1 minute).",
   "Command" = "Wisdom save (DC {dc}); on a failure, a creature follows a one-word command on its next turn.",
-  "Cure Wounds" = "No roll. Touch a creature; it regains 2d8 {modifier} HP.",
+  "Cure Wounds" = "No roll. Touch a creature; it regains 1d8 + {modifier} HP.",
   "Guiding Bolt" = "Ranged spell attack ({attack}); 4d6 radiant damage on a hit. The next attack against the target has advantage. Range 120 ft.",
   "Sanctuary" = "Wisdom save (DC {dc}) required for a creature to target the warded creature with an attack or harmful spell. No concentration; up to 1 minute.",
   "Shield of Faith" = "No roll. A creature gains +2 AC (concentration, up to 10 minutes).",
   "Animal Friendship" = "Wisdom save (DC {dc}); on a failure, a Beast is Charmed for 24 hours. Range 30 ft.",
   "Entangle" = "Strength save (DC {dc}) or become Restrained by plants; the area is difficult terrain (concentration, up to 1 minute).",
   "Goodberry" = "No roll. Create 10 berries; each restores 1 HP and provides nourishment. They lose potency after 24 hours.",
-  "Divine Favor" = "No roll. For up to 1 minute (concentration), your weapon hits deal an extra 1d4 Radiant damage.",
+  "Divine Favor" = "For up to 1 minute (concentration), your weapon hits deal an extra 1d4 radiant damage.",
   "Heroism" = "No roll. A creature is immune to Frightened and gains temporary HP equal to your spellcasting modifier at the start of each turn (concentration, up to 1 minute).",
-  "Searing Smite" = "After a melee hit, deal an extra 1d6 Fire damage. The target then makes a Constitution save (DC {dc}) at the end of each turn; on a failure, it takes 1d6 Fire damage, and on a success the burning ends (concentration, up to 1 minute).",
-  "Ensnaring Strike" = "After you hit with a weapon, the target makes a Strength save (DC {dc}) or becomes Restrained by vines; it can repeat the save to escape (concentration, up to 1 minute).",
+  "Searing Smite" = "Your next melee weapon hit deals an extra 1d6 fire damage and ignites the target. At the start of each turn it makes a Constitution save (DC {dc}); on a failure it takes 1d6 fire damage, and on a success the spell ends. A creature can use an action to extinguish the flames (concentration, up to 1 minute).",
+  "Ensnaring Strike" = "Your next weapon hit deals an extra 1d6 piercing damage; a Large or smaller target makes a Strength save (DC {dc}) or is restrained and takes 1d6 piercing damage at the start of each turn. It can use an action to make a Strength check to escape (concentration, up to 1 minute).",
   "Fog Cloud" = "No roll. Create a heavily obscured 20-ft. Sphere (concentration, up to 1 hour).",
-  "Hunter's Mark" = "No roll. Mark a creature; your weapon hits against it deal an extra 1d6 Force damage, and you have advantage on checks to find it (concentration, up to 1 hour).",
+  "Hunter's Mark" = "No roll. Mark a creature; your weapon hits against it deal an extra 1d6 damage, and you have advantage on checks to find it (concentration, up to 1 hour).",
   "Longstrider" = "No roll. A creature's Speed increases by 10 ft. for 1 hour.",
   "Speak with Animals" = "No roll. Understand and communicate with Beasts for 10 minutes.",
   "Burning Hands" = "Dexterity save (DC {dc}); 3d6 Fire damage in a 15-ft. Cone on a failure, half on a success.",
@@ -348,15 +615,15 @@ spell_mechanics <- c(
   "Magic Missile" = "No attack roll or save; three darts automatically hit for 1d4 + 1 Force damage each. Range 120 ft.",
   "Shield" = "Reaction, no roll. Gain +5 AC until the start of your next turn, including against the triggering attack; Magic Missile deals no damage to you.",
   "Armor of Agathys" = "No roll. Gain 5 temporary HP; while any remain, a creature that hits you with a melee attack takes 5 Cold damage. Lasts 1 hour.",
-  "Arms of Hadar" = "Strength save (DC {dc}); 2d6 Necrotic damage on a failure and the target cannot take reactions until its next turn. 10-ft. Emanation.",
+  "Arms of Hadar" = "Strength save (DC {dc}); creatures within 10 ft. take 2d6 necrotic damage and cannot take reactions until their next turn on a failed save. No damage on a success.",
   "Hex" = "No roll. Your hits deal an extra 1d6 Necrotic damage to the cursed target, which has disadvantage on checks with one chosen ability (concentration, up to 1 hour).",
   "Protection from Evil and Good" = "No roll. One creature is warded against Aberrations, Celestials, Elementals, Fey, Fiends, and Undead (concentration, up to 10 minutes).",
-  "Witch Bolt" = "Ranged spell attack ({attack}); 1d12 Lightning damage on a hit. Range 60 ft.; the link can deal 1d12 more damage on later turns while maintained.",
+  "Witch Bolt" = "Ranged spell attack ({attack}); 1d12 lightning damage on a hit. Range 30 ft.; on later turns, use an action to deal 1d12 lightning damage while the target remains within range and in sight (concentration, up to 1 minute).",
   "Detect Magic" = "No roll. Sense magic within 30 ft. and, with an action, see an aura around it (concentration, up to 10 minutes).",
   "Find Familiar" = "No attack roll. Summon a spirit in an animal form to serve as a familiar; it acts independently and shares a telepathic link with you."
 )
 
-spellcasting_classes <- names(spell_choices)
+spellcasting_classes <- setdiff(names(spell_choices), c("Paladin", "Ranger"))
 spellcasting_abilities <- c(
   Bard = "charisma",
   Cleric = "wisdom",
@@ -379,6 +646,209 @@ spellcasting_stats <- function(class, scores) {
   )
 }
 
+ability_modifier <- function(score) {
+  floor((score - 10) / 2)
+}
+
+proficiency_bonus <- function(level = 1L) {
+  2L + floor((level - 1L) / 4L)
+}
+
+species_skill_proficiencies <- function(species, selected_species_skill = character()) {
+  if (identical(species, "Elf")) {
+    "Perception"
+  } else if (species %in% c("Human", "Half-Elf")) {
+    selected_species_skill
+  } else {
+    character()
+  }
+}
+
+class_skill_proficiencies <- function(class, background, selected_skills,
+                                      species = NULL,
+                                      selected_species_skill = character()) {
+  unique(c(background_rules[[background]]$skills,
+    species_skill_proficiencies(species, selected_species_skill),
+    selected_skills))
+}
+
+skill_bonus <- function(skill, scores, class, background, selected_skills,
+                        expertise = character(), species = NULL,
+                        selected_species_skill = character()) {
+  ability <- unname(skill_abilities[[skill]])
+  bonus <- ability_modifier(scores[[ability]])
+  if (skill %in% class_skill_proficiencies(class, background, selected_skills,
+      species, selected_species_skill)) {
+    bonus <- bonus + proficiency_bonus()
+    if (skill %in% expertise) bonus <- bonus + proficiency_bonus()
+  }
+  bonus
+}
+
+saving_throw_bonus <- function(ability, scores, class) {
+  bonus <- ability_modifier(scores[[unname(ability_scores[[ability]])]])
+  if (ability %in% class_rules[[class]]$saves) bonus <- bonus + proficiency_bonus()
+  bonus
+}
+
+armour_class <- function(class, scores, armour, shield = FALSE) {
+  dexterity <- ability_modifier(scores[["dexterity"]])
+  if (identical(armour, "No armour") && identical(class, "Barbarian")) {
+    base <- 10 + dexterity + ability_modifier(scores[["constitution"]])
+  } else if (identical(armour, "No armour") && identical(class, "Monk")) {
+    base <- 10 + dexterity +
+      if (isTRUE(shield)) 0L else ability_modifier(scores[["wisdom"]])
+  } else {
+    profile <- armour_profiles[[armour]]
+    dexterity_bonus <- if (identical(profile$proficiency, "Heavy")) {
+      0L
+    } else {
+      min(dexterity, profile$dexterity)
+    }
+    base <- profile$base + dexterity_bonus
+  }
+  as.integer(base + if (isTRUE(shield)) 2L else 0L)
+}
+
+weapon_attack_record <- function(weapon, scores, class) {
+  profile <- weapon_profiles[[weapon]]
+  if (is.null(profile)) return(NULL)
+  ability <- profile$ability
+  if (identical(ability, "finesse")) {
+    ability <- if (scores[["dexterity"]] > scores[["strength"]]) "dexterity" else "strength"
+  }
+  attack_modifier <- ability_modifier(scores[[ability]])
+  limited <- class_limited_weapons[[class]]
+  proficient <- if (!is.null(limited)) {
+    weapon %in% limited
+  } else {
+    profile$category == "Simple" ||
+      isTRUE(class_martial_weapon_proficiency[[class]]) ||
+      weapon %in% weapon_proficiency_exceptions[[class]]
+  }
+  list(
+    name = weapon,
+    bonus = attack_modifier + if (proficient) proficiency_bonus() else 0L,
+    damage = paste0(profile$damage, " ",
+      if (attack_modifier >= 0) "+" else "", attack_modifier, " ", profile$type),
+    ability = paste0(toupper(substr(ability, 1L, 1L)), substring(ability, 2L)),
+    proficient = proficient,
+    properties = unname(weapon_properties[[weapon]])
+  )
+}
+
+spell_prepared_limit <- function(class, scores) {
+  if (!class %in% c("Cleric", "Druid", "Wizard")) {
+    return(0L)
+  }
+  stats <- spellcasting_stats(class, scores)
+  switch(
+    class,
+    Cleric = max(1L, stats$modifier + 1L),
+    Druid = max(1L, stats$modifier + 1L),
+    Wizard = max(1L, stats$modifier + 1L),
+    0L
+  )
+}
+
+spell_range <- function(spell) {
+  mechanics <- unname(spell_mechanics[[spell]])
+  match <- regexec("Range ([^.;]+)", mechanics, perl = TRUE)
+  result <- regmatches(mechanics, match)[[1]]
+  if (length(result) > 1L) result[[2]] else if (grepl("Touch", mechanics, fixed = TRUE)) {
+    "Touch"
+  } else {
+    "See effect"
+  }
+}
+
+spell_duration <- function(spell) {
+  mechanics <- unname(spell_mechanics[[spell]])
+  match <- regexec("(concentration, up to [^).]+|up to [0-9]+ (rounds?|minutes?|hours?|days?)|for [0-9]+ (rounds?|minutes?|hours?|days?)|Lasts [^.;]+)", mechanics, ignore.case = TRUE, perl = TRUE)
+  result <- regmatches(mechanics, match)[[1]]
+  if (length(result) > 1L) result[[2]] else "See spell description"
+}
+
+spell_components <- function(spell) {
+  "Check spell description"
+}
+
+class_armour_training <- list(
+  Barbarian = c("Light", "Medium", "Shield"),
+  Bard = "Light",
+  Cleric = c("Light", "Medium", "Shield"),
+  Druid = c("Light", "Medium", "Shield"),
+  Fighter = c("Light", "Medium", "Heavy", "Shield"),
+  Monk = character(),
+  Paladin = c("Light", "Medium", "Heavy", "Shield"),
+  Ranger = c("Light", "Medium", "Shield"),
+  Rogue = "Light",
+  Sorcerer = character(),
+  Warlock = "Light",
+  Wizard = character()
+)
+
+default_character_gear <- function(class, background, species, scores, subrace = NULL) {
+  hp <- level_one_hit_points(class, scores, species, subrace)
+  list(
+    armour = unname(class_starting_armour[[class]]),
+    shield = class %in% c("Cleric", "Fighter", "Paladin"),
+    weapons = unname(class_starting_weapons[[class]]),
+    inventory = "",
+    cp = 0L, sp = 0L, ep = 0L, gp = 0L, pp = 0L,
+    spell_slots_remaining = class_rules[[class]]$slots,
+    current_hp = hp, temporary_hp = 0L,
+    death_successes = 0L, death_failures = 0L
+  )
+}
+
+normalise_character_gear <- function(gear, class, background, species, scores,
+                                     subrace = NULL) {
+  defaults <- default_character_gear(class, background, species, scores, subrace)
+  if (!is.list(gear)) return(defaults)
+  if (is.null(gear$armour)) gear$armour <- defaults$armour
+  if (!is.character(gear$armour) || length(gear$armour) != 1L ||
+      is.na(gear$armour) || !gear$armour %in% names(armour_profiles)) {
+    stop("The saved armour choice is invalid.", call. = FALSE)
+  }
+  if (is.null(gear$inventory)) gear$inventory <- defaults$inventory
+  if (!is.character(gear$inventory) || length(gear$inventory) != 1L ||
+      is.na(gear$inventory)) {
+    stop("The saved inventory must be text.", call. = FALSE)
+  }
+  if (is.null(gear$weapons)) {
+    gear$weapons <- defaults$weapons
+  } else {
+    gear$weapons <- unlist(gear$weapons, use.names = FALSE)
+  }
+  if (length(gear$weapons) > 3L || anyNA(gear$weapons) ||
+      any(!gear$weapons %in% names(weapon_profiles))) {
+    stop("The save file contains invalid equipped weapons.", call. = FALSE)
+  }
+  gear$weapons <- unique(gear$weapons)
+  if (is.null(gear$shield)) gear$shield <- defaults$shield
+  if (!is.logical(gear$shield) || length(gear$shield) != 1L || is.na(gear$shield)) {
+    stop("The saved shield choice is invalid.", call. = FALSE)
+  }
+  integer_fields <- c("cp", "sp", "ep", "gp", "pp", "current_hp",
+    "temporary_hp", "spell_slots_remaining", "death_successes", "death_failures")
+  for (field in integer_fields) {
+    value <- gear[[field]]
+    if (is.null(value)) value <- defaults[[field]]
+    if (!is.numeric(value) || length(value) != 1L || !is.finite(value) ||
+        value != as.integer(value) || value < 0 ||
+        (field == "spell_slots_remaining" &&
+          value > class_rules[[class]]$slots) ||
+        (field %in% c("death_successes", "death_failures") && value > 3L)) {
+      stop(paste("The saved", field, "value is invalid."), call. = FALSE)
+    }
+    gear[[field]] <- as.integer(value)
+  }
+  gear$armour <- as.character(gear$armour)
+  gear$inventory <- as.character(gear$inventory)
+  gear
+}
+
 spell_mechanics_for <- function(spell, class, scores) {
   stats <- spellcasting_stats(class, scores)
   mechanics <- unname(spell_mechanics[[spell]])
@@ -391,7 +861,7 @@ spell_mechanics_for <- function(spell, class, scores) {
 
 equipment_options <- c(
   "Trailwarden's Pack" = "A weatherproof cloak, bedroll, flint, waterskin, trail rations, rope, and a hooded lantern.",
-  "Rookhaven Guard Kit" = "A sturdy traveling coat, shield, whetstone, waterskin, trail rations, and a simple field-repair kit.",
+  "Rookhaven Guard Kit" = "A sturdy travelling coat, shield, whetstone, waterskin, trail rations, and a simple field-repair kit.",
   "Wayfarer's Satchel" = "A light cloak, journal, charcoal sticks, bandages, waterskin, trail rations, and a small tool roll."
 )
 
@@ -419,12 +889,6 @@ format_background <- function(choice) {
   paste0(choice, ":\n", unname(background_descriptions[[choice]]))
 }
 
-default_ability_increases <- function(background, scores) {
-  eligible <- background_rules[[background]]$abilities
-  ordered <- eligible[order(scores[ability_scores[eligible]], decreasing = TRUE)]
-  setNames(c(2L, 1L), ordered[1:2])
-}
-
 apply_ability_increases <- function(scores, increases) {
   result <- scores
   if (length(increases)) {
@@ -436,10 +900,233 @@ apply_ability_increases <- function(scores, increases) {
   result
 }
 
-level_one_hit_points <- function(class, scores, species) {
+default_subrace <- function(race) {
+  subraces <- race_subraces[[race]]
+  if (is.null(subraces)) return(NULL)
+  unname(subraces[[1L]])
+}
+
+default_race_choices <- function(race, subrace) {
+  switch(
+    race,
+    Human = if (identical(subrace, "Variant Human")) {
+      list(ability_names = c("Strength", "Dexterity"),
+        ability_bonuses = c(strength = 1L, dexterity = 1L),
+        skill = "Perception", feat = "Alert")
+    } else {
+      list(language = "Dwarvish")
+    },
+    Elf = if (identical(subrace, "High Elf")) list(cantrip = "Mage Hand") else list(),
+    Dwarf = list(tool = "Smith's Tools"),
+    Dragonborn = list(draconic_ancestry = "Red"),
+    `Half-Elf` = list(ability_names = c("Strength", "Dexterity"),
+      ability_bonuses = c(strength = 1L, dexterity = 1L),
+      skills = c("Perception", "Insight")),
+    list()
+  )
+}
+
+racial_ability_bonuses <- function(race, subrace, choices = list()) {
+  bonuses <- race_subrace_rules[[race]][[subrace]]$bonuses
+  if (is.null(bonuses)) bonuses <- integer()
+  bonuses <- c(bonuses, choices$ability_bonuses)
+  result <- setNames(integer(length(ability_scores)), unname(ability_scores))
+  if (length(bonuses)) {
+    for (ability in names(bonuses)) {
+      if (ability %in% names(result)) result[[ability]] <- result[[ability]] + bonuses[[ability]]
+    }
+  }
+  result
+}
+
+race_trait_summary <- function(race, subrace, choices = list()) {
+  traits <- race_subrace_rules[[race]][[subrace]]$traits
+  if (identical(race, "Dragonborn") && !is.null(choices$draconic_ancestry)) {
+    traits <- c(traits, paste0(choices$draconic_ancestry, " ancestry: ",
+      draconic_ancestry[[choices$draconic_ancestry]], " damage"))
+  }
+  if (identical(subrace, "Variant Human")) {
+    traits <- c(traits, paste0("Feat:", choices$feat))
+  }
+  if (identical(race, "Half-Elf")) {
+    traits <- c(traits,
+      paste0("Skill Versatility: ", paste(choices$skills, collapse = " and ")))
+  }
+  if (identical(race, "Human") && identical(subrace, "Human") &&
+      !is.null(choices$language)) {
+    traits <- c(traits, paste("Additional language:", choices$language))
+  }
+  if (identical(race, "Dwarf") && !is.null(choices$tool)) {
+    traits <- c(traits, paste("Tool Proficiency:", choices$tool))
+  }
+  if (identical(subrace, "High Elf") && !is.null(choices$cantrip)) {
+    traits <- c(traits, paste("High Elf Cantrip:", choices$cantrip))
+  }
+  bonuses <- racial_ability_bonuses(race, subrace, choices)
+  racial_bonuses <- bonuses[bonuses > 0L]
+  if (length(racial_bonuses)) {
+    traits <- c(traits, paste0("Ability Score Increase: ",
+      paste(paste0("+", racial_bonuses, " ",
+        names(racial_bonuses)), collapse = ", ")))
+  }
+  unique(traits)
+}
+
+race_walking_speed <- function(race, subrace) {
+  speed <- race_subrace_rules[[race]][[subrace]]$speed
+  if (is.null(speed)) 30L else as.integer(speed)
+}
+
+race_size <- function(race, subrace) {
+  traits <- race_subrace_rules[[race]][[subrace]]$traits
+  size_trait <- grep("^(Small|Medium) size", traits, value = TRUE)
+  if (length(size_trait)) sub(" size$", "", size_trait[[1L]]) else "Medium"
+}
+
+normalise_race_choices <- function(race, subrace, choices, allow_defaults = FALSE) {
+  fail <- function(message) stop(message, call. = FALSE)
+  if (!is.list(choices)) fail("The save file contains invalid race choices.")
+  defaults <- if (allow_defaults) default_race_choices(race, subrace) else list()
+  value <- function(name) {
+    selected <- choices[[name]]
+    if (is.null(selected)) selected <- defaults[[name]]
+    if (is.null(selected)) return(character())
+    unlist(selected, use.names = FALSE)
+  }
+  result <- list()
+  if (identical(race, "Human") && identical(subrace, "Variant Human")) {
+    abilities <- as.character(value("ability_names"))
+    skill <- as.character(value("skill"))
+    feat <- as.character(value("feat"))
+    if (length(abilities) != 2L || anyDuplicated(abilities) ||
+        any(!abilities %in% names(ability_scores)) ||
+        length(skill) != 1L || !skill %in% names(skill_abilities) ||
+        length(feat) != 1L || !feat %in% phb_feats) {
+      fail("The save file contains invalid Variant Human choices.")
+    }
+    result$ability_names <- abilities
+    result$ability_bonuses <- setNames(rep(1L, 2L),
+      unname(ability_scores[abilities]))
+    result$skill <- skill
+    result$feat <- feat
+  } else if (identical(race, "Human")) {
+    language <- as.character(value("language"))
+    if (length(language) != 1L || !language %in% race_language_choices) {
+      fail("The save file contains an invalid Human language choice.")
+    }
+    result$language <- language
+  } else if (identical(race, "Dwarf")) {
+    tool <- as.character(value("tool"))
+    if (length(tool) != 1L ||
+        !tool %in% c("Smith's Tools", "Brewer's Supplies", "Mason's Tools")) {
+      fail("The save file contains an invalid Dwarven tool choice.")
+    }
+    result$tool <- tool
+  } else if (identical(race, "Elf") && identical(subrace, "High Elf")) {
+    cantrip <- as.character(value("cantrip"))
+    if (length(cantrip) != 1L || !cantrip %in% spell_cantrips$Wizard) {
+      fail("The save file contains an invalid High Elf cantrip.")
+    }
+    result$cantrip <- cantrip
+  } else if (identical(race, "Dragonborn")) {
+    ancestry <- as.character(value("draconic_ancestry"))
+    if (length(ancestry) != 1L || !ancestry %in% names(draconic_ancestry)) {
+      fail("The save file contains an invalid Draconic Ancestry choice.")
+    }
+    result$draconic_ancestry <- ancestry
+  } else if (identical(race, "Half-Elf")) {
+    abilities <- as.character(value("ability_names"))
+    skills <- as.character(value("skills"))
+    if (length(abilities) != 2L || anyDuplicated(abilities) ||
+        any(!abilities %in% setdiff(names(ability_scores), "Charisma")) ||
+        length(skills) != 2L || anyDuplicated(skills) ||
+        any(!skills %in% names(skill_abilities))) {
+      fail("The save file contains invalid Half-Elf choices.")
+    }
+    result$ability_names <- abilities
+    result$ability_bonuses <- setNames(rep(1L, 2L),
+      unname(ability_scores[abilities]))
+    result$skills <- skills
+  }
+  result
+}
+
+default_background_choices <- function(background) {
+  rules <- background_choice_rules[[background]]
+  if (is.null(rules)) return(list())
+  choices <- list()
+  if (!is.null(rules$languages)) {
+    choices$languages <- head(race_language_choices, rules$languages)
+  }
+  if (!is.null(rules$artisan_tool)) choices$artisan_tool <- artisan_tools[[1L]]
+  if (!is.null(rules$gaming_set)) choices$gaming_set <- gaming_sets[[1L]]
+  if (!is.null(rules$instrument)) choices$instrument <- musical_instruments[[1L]]
+  if (!is.null(rules$con_tools)) choices$con_tools <- "Forgery Kit"
+  choices
+}
+
+normalise_background_choices <- function(background, choices, allow_defaults = FALSE) {
+  fail <- function(message) stop(message, call. = FALSE)
+  if (!is.list(choices)) fail("The save file contains invalid background choices.")
+  defaults <- if (allow_defaults) default_background_choices(background) else list()
+  value <- function(name) {
+    selected <- choices[[name]]
+    if (is.null(selected)) selected <- defaults[[name]]
+    unlist(selected, use.names = FALSE)
+  }
+  rules <- background_choice_rules[[background]]
+  if (is.null(rules)) return(list())
+  result <- list()
+  if (!is.null(rules$languages)) {
+    languages <- as.character(value("languages"))
+    if (length(languages) != rules$languages || anyDuplicated(languages) ||
+        any(!languages %in% race_language_choices)) {
+      fail("The save file contains invalid background language choices.")
+    }
+    result$languages <- languages
+  }
+  if (!is.null(rules$artisan_tool)) {
+    tool <- as.character(value("artisan_tool"))
+    if (length(tool) != 1L || !tool %in% artisan_tools) {
+      fail("The save file contains an invalid artisan's tool choice.")
+    }
+    result$artisan_tool <- tool
+  }
+  if (!is.null(rules$gaming_set)) {
+    gaming_set <- as.character(value("gaming_set"))
+    if (length(gaming_set) != 1L || !gaming_set %in% gaming_sets) {
+      fail("The save file contains an invalid gaming set choice.")
+    }
+    result$gaming_set <- gaming_set
+  }
+  if (!is.null(rules$instrument)) {
+    instrument <- as.character(value("instrument"))
+    if (length(instrument) != 1L || !instrument %in% musical_instruments) {
+      fail("The save file contains an invalid musical instrument choice.")
+    }
+    result$instrument <- instrument
+  }
+  if (!is.null(rules$con_tools)) {
+    con_tools <- as.character(value("con_tools"))
+    if (length(con_tools) != 1L || !nzchar(trimws(con_tools))) {
+      fail("Enter the tool used for your Charlatan's chosen con.")
+    }
+    result$con_tools <- trimws(con_tools)
+  }
+  result
+}
+
+background_tool_summary <- function(background, choices = list()) {
+  selected <- unlist(choices[c("artisan_tool", "gaming_set", "instrument",
+    "con_tools")], use.names = FALSE)
+  parts <- c(background_rules[[background]]$tool, selected[nzchar(selected)])
+  paste(unique(parts[nzchar(parts)]), collapse = "; ")
+}
+
+level_one_hit_points <- function(class, scores, species, subrace = NULL) {
   class_rules[[class]]$hit_die +
     floor((scores[["constitution"]] - 10) / 2) +
-    if (identical(species, "Dwarf")) 1L else 0L
+    if (identical(species, "Dwarf") && identical(subrace, "Hill Dwarf")) 1L else 0L
 }
 
 spell_selection_limits <- function(class, scores) {
@@ -453,10 +1140,8 @@ spell_selection_limits <- function(class, scores) {
       spell_label = "prepared spells"),
     Druid = list(cantrips = 2L, spells = max(1L, ability_modifier("wisdom") + 1L),
       spell_label = "prepared spells"),
-    Paladin = list(cantrips = 0L, spells = max(1L, ability_modifier("charisma")),
-      spell_label = "prepared spells"),
-    Ranger = list(cantrips = 0L, spells = max(1L, ability_modifier("wisdom")),
-      spell_label = "prepared spells"),
+    Paladin = list(cantrips = 0L, spells = 0L, spell_label = "prepared spells"),
+    Ranger = list(cantrips = 0L, spells = 0L, spell_label = "known spells"),
     Sorcerer = list(cantrips = 4L, spells = 2L, spell_label = "known spells"),
     Warlock = list(cantrips = 2L, spells = 2L, spell_label = "known spells"),
     Wizard = list(cantrips = 3L, spells = 6L, spell_label = "spellbook spells"),
@@ -465,71 +1150,188 @@ spell_selection_limits <- function(class, scores) {
 }
 
 character_payload <- function(species, class, background, scores, ability_increases,
-                              details, skills, cantrips, spells, equipment) {
+                              details, skills, expertise, species_skill,
+                              cantrips, spells,
+                              prepared_spells, equipment, gear, subrace = NULL,
+                              race_choices = list(), background_choices = list()) {
   list(
-    schema_version = 4,
+    schema_version = 7,
     species = species,
+    subrace = subrace,
+    race_choices = race_choices,
+    background_choices = background_choices,
     class = class,
     background_choice = background,
     ability_scores = as.list(scores),
     ability_increases = as.list(ability_increases),
     details = details,
     skills = as.list(skills),
+    expertise = as.list(expertise),
+    species_skill = as.list(species_skill),
     cantrips = as.list(cantrips),
     spells = as.list(spells),
-    equipment = equipment
+    prepared_spells = as.list(prepared_spells),
+    equipment = equipment,
+    gear = gear
   )
 }
 
 character_sheet_lines <- function(species, class, background, scores,
-                                  ability_increases, details, skills,
-                                  cantrips, spells, equipment) {
-  final <- apply_ability_increases(scores, ability_increases)
+                                  ability_increases, details, skills, expertise,
+                                  species_skill, cantrips, spells, prepared_spells,
+                                  equipment, gear, subrace = NULL,
+                                  race_choices = list(),
+                                  background_choices = list()) {
+  if (is.null(subrace)) subrace <- default_subrace(species)
+  final <- scores + racial_ability_bonuses(species, subrace, race_choices)
   score_lines <- vapply(seq_along(ability_scores), function(i) {
     id <- unname(ability_scores[[i]])
-    paste0(names(ability_scores)[i], ": ", final[[id]])
+    modifier <- ability_modifier(final[[id]])
+    paste0(names(ability_scores)[i], ": ", final[[id]], " (",
+      if (modifier >= 0) "+" else "", modifier, ")")
   }, character(1))
   background_info <- background_rules[[background]]
   class_info <- class_rules[[class]]
-  increase_lines <- paste0(names(ability_increases), " +", ability_increases)
+  racial_traits <- race_trait_summary(species, subrace, race_choices)
+  proficient_skills <- class_skill_proficiencies(class, background, skills,
+    species, species_skill)
+  saving_lines <- vapply(names(ability_scores), function(ability) {
+    bonus <- saving_throw_bonus(ability, final, class)
+    paste0(ability, ": ", if (bonus >= 0) "+" else "", bonus)
+  }, character(1))
+  attacks <- lapply(unique(c(gear$weapons, "Unarmed Strike")), function(weapon) {
+    attack <- weapon_attack_record(weapon, final, class)
+    paste0(attack$name, " — ", if (attack$bonus >= 0) "+" else "",
+      attack$bonus, " to hit; ", attack$damage,
+      "; ", if (attack$proficient) "proficient" else "not proficient",
+      "; ", attack$properties)
+  })
+  spell_line <- function(spell) {
+    paste0(spell, " — Range: ", spell_range(spell),
+      "; Duration: ", spell_duration(spell),
+      "; Components: ", spell_components(spell),
+      if (spell %in% prepared_spells) "; Prepared" else "")
+  }
+  max_hp <- level_one_hit_points(class, final, species, subrace)
+  spell_stats <- if (class %in% spellcasting_classes) {
+    stats <- spellcasting_stats(class, final)
+    c(
+      paste0("Spellcasting ability: ", stats$ability),
+      paste0("Spell attack bonus: ", if (stats$attack >= 0) "+" else "", stats$attack),
+      paste0("Spell save DC: ", stats$save_dc)
+    )
+  } else {
+    character()
+  }
+  skill_lines <- vapply(proficient_skills, function(skill) {
+    bonus <- skill_bonus(skill, final, class, background, skills, expertise,
+      species, species_skill)
+    paste0(skill, " (", skill_abilities[[skill]], ")",
+      if (skill %in% expertise) " · Expertise" else "", ": ",
+      if (bonus >= 0) "+" else "", bonus)
+  }, character(1))
+  detail_lines <- vapply(c("pronouns", "age", "height", "eyes", "hair",
+    "appearance", "personality", "ideals", "bonds", "flaws", "backstory",
+    "languages", "notes"), function(field) {
+    value <- details[[field]]
+    if (is.null(value) || !nzchar(trimws(value))) return("")
+    paste0(paste0(toupper(substr(field, 1L, 1L)), substring(field, 2L)), ": ", value)
+  }, character(1))
   c(
     details$character_name,
-    paste(species, class, "Level 1", sep = " | "),
+    paste(species, subrace, class, "Level 1", sep = " | "),
     paste0("Alignment: ", details$alignment),
     paste0("Background: ", background),
-    paste0("Origin feat: ", background_info$feat),
-    paste0("Background ability increases: ", paste(increase_lines, collapse = ", ")),
+    paste0("Background feature: ", background_info$feature),
     "",
-    "Ability scores:",
+    "Ability scores and modifiers:",
     score_lines,
+    paste0("Proficiency bonus: +", proficiency_bonus()),
+    paste0("Initiative: ", if (ability_modifier(final[["dexterity"]]) >= 0) "+" else "",
+      ability_modifier(final[["dexterity"]])),
+    paste0("Size: ", race_size(species, subrace)),
+    paste0("Walking speed: ", race_walking_speed(species, subrace), " ft."),
+    paste0("Passive Perception: ", 10L + skill_bonus("Perception", final, class,
+      background, skills, expertise, species, species_skill)),
     "",
-    "Skill proficiencies:",
-    paste0("- ", c(background_info$skills, skills)),
-    paste0("Tool proficiency: ", background_info$tool),
-    paste0("Species traits: ", species_traits[[species]]),
+    "Saving throws:",
+    saving_lines,
+    "",
+    "Proficient skills:",
+    skill_lines,
+    paste0("Background tool proficiencies: ",
+      background_tool_summary(background, background_choices)),
+    paste0("Background languages: ", if (length(background_choices$languages)) {
+      paste(background_choices$languages, collapse = ", ")
+    } else {
+      background_info$languages
+    }),
+    if (length(species_skill)) paste0("Racial skill proficiency: ", species_skill),
+    paste0("Racial traits: ", paste(racial_traits, collapse = "; ")),
     "",
     "Level 1 class features:",
     paste0("- ", class_info$features),
     paste0("Saving throw proficiencies: ", paste(class_info$saves, collapse = ", ")),
-    paste0("Hit points: ", level_one_hit_points(class, final, species)),
-    paste0("Level 1 spell slots: ", if (class_info$slots == 0L) {
+    paste0("Hit points: ", gear$current_hp, "/", max_hp,
+      if (gear$temporary_hp > 0) paste0(" + ", gear$temporary_hp, " temporary") else ""),
+    paste0("Armour class: ", armour_class(class, final, gear$armour, gear$shield),
+      " (", gear$armour, if (gear$shield) ", shield" else "", ")"),
+    paste0("Armour training: ",
+      if (armour_profiles[[gear$armour]]$proficiency == "None" ||
+          armour_profiles[[gear$armour]]$proficiency %in% class_armour_training[[class]]) {
+        "proficient"
+      } else {
+        paste("not proficient with", tolower(armour_profiles[[gear$armour]]$proficiency), "armour")
+      }),
+    if (gear$shield && !"Shield" %in% class_armour_training[[class]]) {
+      "Not proficient with shields."
+    },
+    paste0("Death saves: ", gear$death_successes, " successes, ",
+      gear$death_failures, " failures"),
+    "",
+    "Attacks:",
+    paste0("- ", unlist(attacks, use.names = FALSE)),
+    "",
+    "Spellcasting:",
+    spell_stats,
+    paste0("Spell slots: ", if (class_info$slots == 0L) {
       "None"
     } else if (identical(class, "Warlock")) {
-      "1 Pact Magic slot"
+      paste(gear$spell_slots_remaining, "/", class_info$slots, "Pact Magic slot")
     } else {
-      paste(class_info$slots, "1st-level spell slots")
+      paste(gear$spell_slots_remaining, "/", class_info$slots,
+        "1st-level slots")
     }),
     paste0("Background equipment: ", background_info$equipment),
     "",
     "Campaign equipment:",
     paste0(equipment, ":"),
     unname(equipment_options[[equipment]]),
+    "Inventory:",
+    gear$inventory,
+    paste0("Coins: ", gear$cp, " CP · ", gear$sp, " SP · ", gear$ep, " EP · ",
+      gear$gp, " GP · ", gear$pp, " PP"),
     "",
     "Cantrips:",
-    if (length(cantrips)) paste0("- ", cantrips) else "None",
+    if (length(cantrips)) {
+      paste0("- ", vapply(cantrips, spell_line, character(1)))
+    } else {
+      "None"
+    },
     "",
-    if (identical(class, "Wizard")) "Spellbook:" else "Level 1 spells:",
-    if (length(spells)) paste0("- ", spells) else "None"
+    if (!class %in% spellcasting_classes) {
+      "Spells:"
+    } else if (identical(class, "Wizard")) {
+      "Spellbook (marked spells are prepared):"
+    } else if (class %in% c("Bard", "Sorcerer", "Warlock")) {
+      "Known level-1 spells:"
+    } else {
+      "Prepared level-1 spells:"
+    },
+    if (length(spells)) paste0("- ", vapply(spells, spell_line, character(1))) else "None",
+    "",
+    "Identity and backstory:",
+    if (length(detail_lines[nzchar(detail_lines)])) detail_lines[nzchar(detail_lines)] else "No additional details."
   )
 }
 
@@ -540,12 +1342,14 @@ validate_character_payload <- function(payload) {
   if (!is.list(payload) || !is.numeric(payload$schema_version) ||
       length(payload$schema_version) != 1L ||
       is.na(payload$schema_version) ||
-      !payload$schema_version %in% c(1, 2, 3, 4)) {
+      !payload$schema_version %in% c(1, 2, 3, 4, 5, 6, 7)) {
     fail("This is not a supported character save file.")
   }
   version <- as.integer(payload$schema_version)
-  if (!is_text(payload$species) || !payload$species %in% names(race_descriptions)) {
-    fail("The save file contains an unknown ancestry.")
+  race <- payload$species
+  if (version <= 5L && identical(race, "Orc")) race <- "Half-Orc"
+  if (!is_text(race) || !race %in% names(race_descriptions)) {
+    fail("The save file contains a race that is not available in the 2014 Player's Handbook.")
   }
   if (!is_text(payload$class) || !payload$class %in% names(class_descriptions)) {
     fail("The save file contains an unknown class.")
@@ -553,30 +1357,48 @@ validate_character_payload <- function(payload) {
   background <- payload$background_choice
   if (version <= 3L) {
     legacy_backgrounds <- c(
-      "Rookhaven Local" = "Guard", "Blackwood Scout" = "Guide",
+      "Rookhaven Local" = "Soldier", "Blackwood Scout" = "Outlander",
       "Caravan Guard" = "Soldier", "Village Healer" = "Hermit",
       "Wandering Scholar" = "Sage", "Disgraced Veteran" = "Soldier",
       "Temple Acolyte" = "Acolyte", "Hedge Mage" = "Sage",
-      "Bounty Hunter" = "Criminal", "Runaway Apprentice" = "Scribe",
+      "Bounty Hunter" = "Criminal", "Runaway Apprentice" = "Sage",
       "Far-Traveled Sailor" = "Sailor", "Heir to a Fallen House" = "Noble"
     )
     old_origin <- payload$backstory_choice
     background <- if (is_text(old_origin) && old_origin %in% names(legacy_backgrounds)) {
       unname(legacy_backgrounds[[old_origin]])
     } else {
-      "Wayfarer"
+      "Outlander"
     }
+  }
+  legacy_background_map <- c(
+    Artisan = "Guild Artisan", Farmer = "Folk Hero", Guard = "Soldier",
+    Guide = "Outlander", Merchant = "Guild Artisan", Scribe = "Sage",
+    Wayfarer = "Outlander"
+  )
+  if (is_text(background) && background %in% names(legacy_background_map)) {
+    background <- unname(legacy_background_map[[background]])
   }
   if (!is_text(background) || !background %in% names(background_rules)) {
     fail("The save file contains an unknown background.")
   }
+  background_choices <- normalise_background_choices(background,
+    if (version >= 7L) payload$background_choices else list(),
+    allow_defaults = version <= 6L)
+  subrace <- if (version >= 6L) payload$subrace else default_subrace(race)
+  if (!is_text(subrace) || !subrace %in% race_subraces[[race]]) {
+    fail("The save file contains an invalid race or subrace.")
+  }
+  race_choices <- normalise_race_choices(race, subrace,
+    if (version >= 6L) payload$race_choices else list(),
+    allow_defaults = version <= 5L)
   if (!is.list(payload$ability_scores) ||
       !all(unname(ability_scores) %in% names(payload$ability_scores))) {
     fail("The save file is missing ability scores.")
   }
   scores <- vapply(unname(ability_scores), function(id) {
     score <- payload$ability_scores[[id]]
-    if (!is.numeric(score) || length(score) != 1 || is.na(score) ||
+    if (!is.numeric(score) || length(score) != 1 || !is.finite(score) ||
         score != as.integer(score) || score < 8 || score > 15) {
       fail(paste("The saved", id, "score must be a whole number from 8 to 15."))
     }
@@ -586,63 +1408,80 @@ validate_character_payload <- function(payload) {
   points <- sum(score_costs[as.character(scores)])
   if (points > 27) fail("The saved ability scores exceed the 27-point budget.")
 
-  ability_increases <- payload$ability_increases
-  if (version <= 3L || is.null(ability_increases)) {
-    ability_increases <- default_ability_increases(background, scores)
-  } else {
-    ability_increases <- unlist(ability_increases, use.names = TRUE)
-    if (!is.numeric(ability_increases) || anyNA(ability_increases) ||
-        any(!names(ability_increases) %in% background_rules[[background]]$abilities) ||
-        anyDuplicated(names(ability_increases)) ||
-        !((length(ability_increases) == 2L &&
-          identical(sort(as.integer(ability_increases)), c(1L, 2L))) ||
-          (length(ability_increases) == 3L && all(ability_increases == 1L)))) {
-      fail("The saved background ability increases are invalid.")
-    }
-    ability_increases <- as.integer(ability_increases)
-    names(ability_increases) <- names(unlist(payload$ability_increases, use.names = TRUE))
-  }
-  final_scores <- apply_ability_increases(scores, ability_increases)
-  if (any(final_scores > 20L)) fail("The saved ability increases exceed the maximum score.")
+  ability_increases <- integer()
+  final_scores <- scores + racial_ability_bonuses(race, subrace, race_choices)
+  if (any(final_scores > 20L)) fail("The saved racial ability increases exceed the maximum score.")
 
   if (!is.list(payload$details)) fail("The save file is missing character details.")
   details <- payload$details
-  text_fields <- c("character_name", "alignment")
+  detail_defaults <- c(
+    character_name = "", alignment = "Unspecified", appearance = "",
+    personality = "", ideals = "", bonds = "", flaws = "", backstory = "",
+    languages = "", notes = "", pronouns = "", age = "", height = "",
+    eyes = "", hair = ""
+  )
+  text_fields <- names(detail_defaults)
+  details_result <- as.list(detail_defaults)
   for (field_name in text_fields) {
     value <- details[[field_name]]
+    if (is.null(value)) value <- detail_defaults[[field_name]]
     if (!is_text(value)) fail(paste("The saved", field_name, "must be text."))
+    details_result[[field_name]] <- value
   }
-  if (!nzchar(trimws(details$character_name))) {
+  if (!nzchar(trimws(details_result$character_name))) {
     fail("The save file must include a character name.")
   }
-  if (!details$alignment %in% valid_alignments) {
+  if (!details_result$alignment %in% valid_alignments) {
     fail("The save file contains an unknown alignment.")
   }
-  details <- list(
-    character_name = details$character_name,
-    alignment = details$alignment
-  )
+  details <- details_result
 
   skills <- unlist(payload$skills, use.names = FALSE)
-  if (version <= 3L) {
+  species_skill <- if (identical(subrace, "Variant Human")) race_choices$skill else
+    if (identical(race, "Half-Elf")) race_choices$skills else character()
+  saved_species_skill <- unlist(payload$species_skill, use.names = FALSE)
+  if (is.null(saved_species_skill)) saved_species_skill <- character()
+  if (version >= 6L &&
+      !setequal(as.character(saved_species_skill), as.character(species_skill))) {
+    fail("The saved racial skill proficiencies do not match the selected race.")
+  }
+  automatic_skills <- unique(c(background_rules[[background]]$skills,
+    species_skill_proficiencies(race, species_skill)))
+  if (version <= 5L) {
     valid_old_skills <- skills[skills %in% skill_choices[[payload$class]]]
-    skills <- unique(setdiff(valid_old_skills, background_rules[[background]]$skills))
+    skills <- unique(setdiff(valid_old_skills, automatic_skills))
     skills <- c(skills, setdiff(skill_choices[[payload$class]],
-      c(background_rules[[background]]$skills, skills)))
+      c(automatic_skills, skills)))
     skills <- head(skills, skill_counts[[payload$class]])
   }
   if (length(skills) != skill_counts[[payload$class]] ||
       anyNA(skills) || anyDuplicated(skills) ||
-      any(!skills %in% setdiff(skill_choices[[payload$class]], background_rules[[background]]$skills))) {
+      any(!skills %in% setdiff(skill_choices[[payload$class]], automatic_skills))) {
     fail("The save file contains invalid class skill selections.")
+  }
+  expertise <- unlist(payload$expertise, use.names = FALSE)
+  if (is.null(expertise)) expertise <- character()
+  if (version <= 5L && identical(payload$class, "Rogue")) {
+    expertise <- head(unique(c(expertise[
+      expertise %in% c(automatic_skills, skills)
+    ], automatic_skills, skills)), 2L)
+  }
+  proficient_skills <- unique(c(automatic_skills, skills))
+  if ((identical(payload$class, "Rogue") && length(expertise) != 2L) ||
+      (!identical(payload$class, "Rogue") && length(expertise) != 0L) ||
+      anyNA(expertise) || anyDuplicated(expertise) ||
+      any(!expertise %in% proficient_skills)) {
+    fail("The save file contains invalid Expertise choices.")
   }
 
   cantrips <- unlist(payload$cantrips, use.names = FALSE)
   spells <- unlist(payload$spells, use.names = FALSE)
-  if (version <= 3L) {
+  if (version <= 5L) {
     limits <- spell_selection_limits(payload$class, final_scores)
-    cantrips <- head(spell_cantrips[[payload$class]], limits$cantrips)
-    spells <- head(spell_choices[[payload$class]], limits$spells)
+    cantrips <- head(unique(c(cantrips, spell_cantrips[[payload$class]])),
+      limits$cantrips)
+    spells <- head(unique(c(spells, spell_choices[[payload$class]])),
+      limits$spells)
   } else {
     limits <- spell_selection_limits(payload$class, final_scores)
   }
@@ -667,22 +1506,65 @@ validate_character_payload <- function(payload) {
   if (!is_text(equipment) || !equipment %in% names(equipment_options)) {
     fail("The save file contains an unknown equipment pack.")
   }
+  prepared_spells <- unlist(payload$prepared_spells, use.names = FALSE)
+  if (version <= 5L) {
+    if (identical(payload$class, "Wizard")) {
+      prepared_spells <- head(spells, spell_prepared_limit(payload$class, final_scores))
+    } else if (payload$class %in% c("Cleric", "Druid")) {
+      prepared_spells <- spells
+    } else if (payload$class %in% c("Paladin", "Ranger")) {
+      prepared_spells <- character()
+    }
+  }
+  if (is.null(prepared_spells)) prepared_spells <- character()
+  prepared_limit <- spell_prepared_limit(payload$class, final_scores)
+  if (length(prepared_spells) > prepared_limit || anyNA(prepared_spells) ||
+      anyDuplicated(prepared_spells) || any(!prepared_spells %in% spells) ||
+      (!identical(payload$class, "Wizard") && length(prepared_spells) > 0L &&
+        !payload$class %in% c("Cleric", "Druid", "Paladin", "Ranger"))) {
+    fail("The save file contains invalid prepared spells.")
+  }
+  if (identical(payload$class, "Wizard") &&
+      length(prepared_spells) != min(prepared_limit, length(spells))) {
+    fail("A Wizard save must contain the selected number of prepared spells.")
+  }
+  if (payload$class %in% c("Cleric", "Druid")) {
+    prepared_spells <- spells
+  }
+  gear_data <- payload$gear
+  if (version <= 5L && is.list(gear_data) &&
+      is.numeric(gear_data$spell_slots_remaining) &&
+      length(gear_data$spell_slots_remaining) == 1L &&
+      is.finite(gear_data$spell_slots_remaining)) {
+    gear_data$spell_slots_remaining <- min(
+      gear_data$spell_slots_remaining, class_rules[[payload$class]]$slots)
+  }
+  gear <- normalise_character_gear(gear_data, payload$class, background,
+    race, final_scores, subrace)
 
   list(
-    species = payload$species,
+    species = race,
+    subrace = subrace,
+    race_choices = race_choices,
     class = payload$class,
     background_choice = background,
+    background_choices = background_choices,
     ability_scores = scores,
     ability_increases = ability_increases,
     details = details,
     skills = skills,
+    expertise = expertise,
+    species_skill = species_skill,
     cantrips = cantrips,
     spells = spells,
-    equipment = equipment
+    prepared_spells = prepared_spells,
+    equipment = equipment,
+    gear = gear
   )
 }
 
 ui <- fluidPage(
+  lang = "en-AU",
   tags$head(tags$style(HTML("
     :root {
       color-scheme: dark;
@@ -768,6 +1650,12 @@ ui <- fluidPage(
     .stats-page { max-width: 1000px; margin: 0 auto; padding: 48px 0 70px; }
     .stats-intro { color: #d3cec2; line-height: 1.65; text-align: center; margin: 0 auto 25px; max-width: 680px; }
     .stats-panel { max-width: 900px; margin: 0 auto; }
+    .stats-guidance { max-width: 900px; margin: 0 auto 20px; text-align: center; }
+    .ability-guidance-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; text-align: left; margin: 18px 0; }
+    .ability-guidance-card { background: #171a20; border: 1px solid var(--border); border-radius: 7px; padding: 12px 14px; }
+    .ability-guidance-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; color: var(--gold-bright); font-family: Georgia, serif; }
+    .ability-guidance-card p { color: #d3cec2; line-height: 1.5; margin: 8px 0; }
+    .ability-suggestion { color: var(--gold); font: 13px 'Segoe UI', sans-serif; }
     .stats-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 34px; }
     .stats-grid .form-group { margin-bottom: 20px; }
     .stats-grid .control-label { color: #e6d5aa; font-family: Georgia, serif; font-size: 16px; }
@@ -898,17 +1786,23 @@ ui <- fluidPage(
     .race-page { max-width: 1000px; margin: 0 auto; padding: 48px 0 70px; }
     .race-heading { color: var(--gold-bright); font: 42px/1.1 Georgia, serif; text-align: center; margin: 0 0 10px; }
     .race-subheading { color: #e4dfd4; font: 24px Georgia, serif; text-align: center; margin: 0 0 8px; }
+    .race-heading.selection-page-title { font-size: 56px; text-align: center; }
+    .race-subheading.selection-page-subtitle { font-size: 30px; text-align: center; }
     .race-prompt { color: var(--muted); text-align: center; margin: 0 0 16px; }
     .race-options { width: 100%; max-width: 860px; margin: 16px auto 0; }
     .race-options .shiny-input-radiogroup,
     .race-options .shiny-input-container,
     .race-options .shiny-options-group { width: 100%; }
     .race-options .shiny-options-group {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
       gap: 18px;
     }
-    .race-options .radio { margin: 0 !important; }
+    .race-options .radio {
+      flex: 0 0 calc((100% - 36px) / 3);
+      margin: 0 !important;
+    }
     .race-options .radio label {
       position: relative;
       display: flex;
@@ -1008,6 +1902,9 @@ ui <- fluidPage(
       margin: 9px 0 0 35px;
       padding-top: 8px;
     }
+    .spell-options .shiny-options-group { grid-auto-rows: 1fr; }
+    .spell-options .checkbox { height: 100%; }
+    .spell-options .checkbox label { height: 100%; min-height: 230px; }
     .spellcasting-summary {
       background: #1b1e25;
       border: 1px solid var(--border);
@@ -1019,12 +1916,11 @@ ui <- fluidPage(
       padding: 12px 16px;
       text-align: center;
     }
-    .spell-options .checkbox label { min-height: 120px; }
     .spell-group-title {
       max-width: 900px;
       margin: 28px auto 18px;
       color: var(--gold-bright);
-      font: 20px Georgia, serif;
+      font: 24px Georgia, serif;
       text-align: center;
     }
     .details-page, .overview-page { max-width: 900px; margin: 0 auto; padding: 44px 0 70px; }
@@ -1048,6 +1944,22 @@ ui <- fluidPage(
     }
     .overview-section ul { list-style: none; padding-left: 0; margin-bottom: 0; }
     .overview-section li { text-align: center; }
+    .sheet-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0 24px;
+      text-align: left;
+    }
+    .sheet-grid .overview-section { min-width: 0; }
+    .sheet-grid .overview-section h3 { text-align: left; }
+    .sheet-grid .overview-section p,
+    .sheet-grid .overview-section li { text-align: left; overflow-wrap: anywhere; }
+    .sheet-grid .overview-section ul { padding-left: 18px; list-style: disc; }
+    .sheet-grid .sheet-full-width { grid-column: 1 / -1; }
+    .gear-panel { text-align: left; }
+    .gear-panel .spell-group-title { margin-top: 24px; }
+    .coin-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0 12px; }
+    .identity-panel { text-align: left; }
     @media print {
       @page { margin: 16mm; }
       body * { visibility: hidden !important; }
@@ -1071,6 +1983,13 @@ ui <- fluidPage(
         border-color: #b8b8b8;
         break-inside: avoid;
       }
+      #character_sheet .sheet-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0 8mm;
+      }
+      #character_sheet .overview-section h3 { color: #522f11 !important; }
+      #character_sheet .overview-section { padding: 3mm 0; }
+      #character_sheet .overview-name { font-size: 28pt; }
     }
     .party-save-panel { text-align: center; }
     .party-save-panel .form-group { max-width: 420px; margin: 0 auto 15px; }
@@ -1079,6 +1998,9 @@ ui <- fluidPage(
     .race-back { background: transparent; border-color: var(--border); color: var(--muted); }
     .race-back:hover, .race-back:focus { background: #252831; border-color: #656b76; color: var(--text); }
     @media (max-width: 767px) {
+      .sheet-grid { grid-template-columns: 1fr; }
+      .sheet-grid .sheet-full-width { grid-column: auto; }
+      .coin-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .app-header h1 { font-size: 29px; }
       .crest { width: 62px; height: 62px; }
       .panel-card { padding: 16px; }
@@ -1088,19 +2010,24 @@ ui <- fluidPage(
       .intro-copy { padding: 24px 20px; }
       .race-page { padding-top: 28px; }
       .race-heading { font-size: 34px; }
-      .race-options .shiny-options-group { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+      .race-heading.selection-page-title { font-size: 46px; }
+      .race-subheading.selection-page-subtitle { font-size: 25px; }
+      .spell-group-title { font-size: 21px; }
+      .race-options .shiny-options-group { gap: 12px; }
+      .race-options .radio { flex-basis: calc((100% - 12px) / 2); }
       .race-options .radio label { min-height: 0; padding: 16px; }
       .multi-options .shiny-options-group { grid-template-columns: 1fr; gap: 10px; }
       .multi-options .checkbox label { min-height: 0; padding: 14px; }
-      .spell-options .checkbox label { min-height: 0; }
+      .spell-options .checkbox label { min-height: 230px; }
       .stats-page { padding-top: 28px; }
       .stats-grid { grid-template-columns: 1fr; gap: 0; }
+      .ability-guidance-grid { grid-template-columns: 1fr; }
       .stats-panel { padding: 18px 16px; }
       .details-page, .overview-page { padding-top: 28px; }
       .overview-name { font-size: 32px; }
     }
     @media (max-width: 480px) {
-      .race-options .shiny-options-group { grid-template-columns: 1fr; }
+      .race-options .radio { flex-basis: 100%; }
     }
   "))),
   uiOutput("app_screen")
@@ -1149,8 +2076,8 @@ introduction_ui <- function() {
         br(),
         em("Rain falls endlessly through the towering pines of the Blackwood.")
       ),
-      p("For generations, the forest has stood as a silent border between civilization and the unknown. Traders travel its roads. Hunters stalk its shadows. Children grow up hearing stories of the things that dwell beneath its ancient canopy."),
-      p(em("Most dismiss those stories as superstition."), br(), em("Most are wrong.")),
+      p("For generations, the forest has stood as a silent border between civilisation and the unknown. Traders travel its roads. Hunters stalk its shadows. Children grow up hearing stories of the things that dwell beneath its ancient canopy."),
+      p(em("Most dismiss those stories as superstition."), br(), em("They are wrong.")),
       p("Recent weeks have brought unsettling rumours:"),
       tags$ul(
         class = "rumor-list",
@@ -1184,7 +2111,8 @@ introduction_ui <- function() {
 
 choice_selection_ui <- function(title, subtitle, prompt, input_id, descriptions,
                                 error_id, back_id, back_label, continue_id,
-                                selected = NULL, options_class = "race-options") {
+                                selected = NULL, options_class = "race-options",
+                                extra_ui = NULL) {
   div(
     class = "race-page",
     h1(class = "race-heading", title),
@@ -1205,6 +2133,7 @@ choice_selection_ui <- function(title, subtitle, prompt, input_id, descriptions,
         selected = selected
       )
     ),
+    extra_ui,
     uiOutput(error_id),
     div(
       class = "race-actions",
@@ -1214,18 +2143,107 @@ choice_selection_ui <- function(title, subtitle, prompt, input_id, descriptions,
   )
 }
 
-race_selection_ui <- function(selected = NULL) {
-  choice_selection_ui(
-    "The Path Begins....",
-    "Who are you?",
-    "Choose your ancestry. Each path has a story of its own.",
-    "selected_race",
-    race_descriptions,
-    "race_error",
-    "back_to_name",
-    "Back to Name",
-    "confirm_race",
-    selected
+race_option_inputs_ui <- function(race, subrace, choices = list()) {
+  if (is.null(race) || !race %in% names(race_subraces)) return(NULL)
+  ability_choices <- setNames(names(ability_scores), names(ability_scores))
+  tagList(
+    selectInput("selected_subrace", "Race / subrace",
+      choices = race_subraces[[race]], selected = subrace),
+    if (identical(race, "Human") && identical(subrace, "Variant Human")) {
+      tagList(
+        selectInput("variant_abilities", "Increase two different abilities by +1",
+          choices = ability_choices, selected = choices$ability_names, multiple = TRUE),
+        selectInput("variant_skill", "Variant Human skill proficiency",
+          choices = names(skill_abilities), selected = choices$skill),
+        p(class = "text-muted", "Choose a feat whose prerequisites your character meets."),
+        selectInput("variant_feat", "Variant Human feat",
+          choices = phb_feats, selected = choices$feat)
+      )
+    },
+    if (identical(race, "Human") && identical(subrace, "Human")) {
+      selectInput("human_language", "Human additional language",
+        choices = race_language_choices, selected = choices$language)
+    },
+    if (identical(race, "Dwarf")) {
+      selectInput("dwarf_tool", "Dwarven tool proficiency",
+        choices = c("Smith's Tools", "Brewer's Supplies", "Mason's Tools"),
+        selected = choices$tool)
+    },
+    if (identical(race, "Elf") && identical(subrace, "High Elf")) {
+      selectInput("high_elf_cantrip", "High Elf wizard cantrip",
+        choices = spell_cantrips$Wizard, selected = choices$cantrip)
+    },
+    if (identical(race, "Dragonborn")) {
+      selectInput("draconic_ancestry", "Draconic ancestry",
+        choices = names(draconic_ancestry), selected = choices$draconic_ancestry)
+    },
+    if (identical(race, "Half-Elf")) {
+      tagList(
+        selectInput("half_elf_abilities", "Increase two other abilities by +1",
+          choices = setdiff(names(ability_scores), "Charisma"),
+          selected = choices$ability_names, multiple = TRUE),
+        selectInput("half_elf_skills", "Half-Elf skill proficiencies",
+          choices = names(skill_abilities), selected = choices$skills, multiple = TRUE)
+      )
+    }
+  )
+}
+
+race_selection_ui <- function(selected = NULL, subrace = NULL, choices = list()) {
+  if (is.null(selected) || !selected %in% names(race_descriptions)) {
+    selected <- names(race_descriptions)[[1L]]
+  }
+  if (is.null(subrace) || !subrace %in% race_subraces[[selected]]) {
+    subrace <- default_subrace(selected)
+  }
+  div(
+    class = "race-page",
+    h1(class = "race-heading selection-page-title", "The Path Begins...."),
+    h2(class = "race-subheading selection-page-subtitle", "Who are you?"),
+    p(class = "race-prompt", "Choose your race and subrace. Their traits and ability score increases are summarised as you make your choices."),
+    div(class = "race-options",
+      radioButtons("selected_race", label = NULL,
+        choiceNames = lapply(names(race_descriptions), function(race) {
+          tags$span(tags$span(class = "race-name", race),
+            tags$span(class = "race-blurb", unname(race_descriptions[[race]])))
+        }),
+        choiceValues = names(race_descriptions), selected = selected)
+    ),
+    uiOutput("race_options_ui"),
+    div(class = "panel-card", h3(class = "spell-group-title", "Your racial benefits"),
+      uiOutput("race_benefits")),
+    uiOutput("race_error"),
+    div(class = "race-actions",
+      actionButton("back_to_name", "Back to Name", class = "btn-default race-back"),
+      actionButton("confirm_race", "Continue", class = "btn-primary begin-button"))
+  )
+}
+
+background_choice_inputs_ui <- function(background, choices = list()) {
+  rules <- background_choice_rules[[background]]
+  if (is.null(rules)) return(NULL)
+  tagList(
+    if (!is.null(rules$languages)) {
+      selectInput("background_languages", paste("Choose", rules$languages, "language(s)"),
+        choices = race_language_choices, selected = choices$languages,
+        multiple = rules$languages > 1L)
+    },
+    if (!is.null(rules$artisan_tool)) {
+      selectInput("background_artisan_tool", "Choose an artisan's tool",
+        choices = artisan_tools, selected = choices$artisan_tool)
+    },
+    if (!is.null(rules$gaming_set)) {
+      selectInput("background_gaming_set", "Choose a gaming set",
+        choices = gaming_sets, selected = choices$gaming_set)
+    },
+    if (!is.null(rules$instrument)) {
+      selectInput("background_instrument", "Choose a musical instrument",
+        choices = musical_instruments, selected = choices$instrument)
+    },
+    if (!is.null(rules$con_tools)) {
+      textInput("background_con_tools", "Tools of your chosen con",
+        value = choices$con_tools)
+    }
   )
 }
 
@@ -1238,17 +2256,17 @@ class_selection_ui <- function(selected = NULL) {
     class_descriptions,
     "class_error",
     "back_to_race",
-    "Back to Ancestry",
+    "Back to Race",
     "confirm_class",
     selected
   )
 }
 
 background_selection_ui <- function(selected = NULL) {
-  ui <- choice_selection_ui(
+  choice_selection_ui(
     "A Life Before the Blackwood....",
     "Choose your background",
-    "Your background grants ability increases, skills, a tool proficiency, and an Origin feat.",
+    "Your background grants two skill proficiencies, tool proficiencies, equipment, and a background feature.",
     "selected_background",
     background_descriptions,
     "background_error",
@@ -1256,17 +2274,63 @@ background_selection_ui <- function(selected = NULL) {
     "Back to Class",
     "confirm_background",
     selected,
-    options_class = "race-options background-options"
+    options_class = "race-options background-options",
+    extra_ui = uiOutput("background_options_ui")
   )
 }
 
-stats_selection_ui <- function(selected_scores, background, increases) {
+suggested_ability_scores <- function(class) {
+  priorities <- class_ability_priorities[[class]]
+  if (is.null(priorities)) return(default_scores)
+  scores <- setNames(integer(length(ability_scores)), unname(ability_scores))
+  scores[unname(ability_scores[priorities])] <- c(15L, 14L, 13L, 12L, 10L, 8L)
+  scores
+}
+
+stats_selection_ui <- function(selected_scores, background, species, subrace, race_choices, class) {
+  suggested <- suggested_ability_scores(class)
   div(
     class = "stats-page",
     h1(class = "race-heading", "The Measure of Your Legend...."),
     h2(class = "race-subheading", "Set your ability scores"),
     p(class = "stats-intro",
-      "Shape your strengths with the sliders. Each score costs points from your 27-point budget; scores range from 8 to 15."
+      "Shape your strengths with the sliders. Each score costs points from your 27-point budget; scores range from 8 to 15. Use the class suggestions as a starting point, or make your own build."
+    ),
+    div(
+      class = "panel-card stats-guidance",
+      h3(class = "spell-group-title", paste(class, "suggested scores")),
+      p(class = "text-muted",
+        paste0(
+          "For a typical ", class, ", prioritize ",
+          paste(head(class_ability_priorities[[class]], 3L), collapse = ", "),
+          ". These are flexible suggestions, not rules. Your ",
+          paste(species, subrace), " provides the racial ability score increases shown below."
+        )
+      ),
+      div(class = "ability-guidance-grid",
+        lapply(seq_along(ability_scores), function(i) {
+          ability <- names(ability_scores)[i]
+          score_id <- unname(ability_scores[[i]])
+          rank <- match(ability, class_ability_priorities[[class]])
+          div(
+            class = "ability-guidance-card",
+            div(
+              class = "ability-guidance-heading",
+              strong(ability),
+              span(class = "ability-suggestion", paste0(suggested[[score_id]], " suggested"))
+            ),
+            p(unname(ability_score_effects[[ability]])),
+            span(class = "text-muted", paste("Priority", rank, "of 6 for", class))
+          )
+        })
+      ),
+      if (identical(class, "Fighter")) {
+        p(class = "text-muted",
+          "Prefer ranged or finesse weapons? Try Dexterity as your top score instead of Strength."
+        )
+      },
+      actionButton("apply_suggested_scores", "Use Suggested Scores",
+        class = "btn-default")
     ),
     div(
       class = "panel-card stats-panel",
@@ -1285,20 +2349,10 @@ stats_selection_ui <- function(selected_scores, background, increases) {
           )
         })
       ),
-      h3(class = "spell-group-title", "Background ability increases"),
+      h3(class = "spell-group-title", "Racial ability score increases"),
       p(class = "stats-intro", paste(
-        background, "allows increases to",
-        paste(background_rules[[background]]$abilities, collapse = ", "),
-        ". Choose +2 to one and +1 to another, or +1 to each of three."
+        "Your", subrace, "racial ability score increases are applied automatically."
       )),
-      selectInput(
-        "background_bonus_mode",
-        "Choose an increase method",
-        choices = c("+2 to one and +1 to another" = "two_one",
-          "+1 to three different abilities" = "three_one"),
-        selected = if (length(increases) == 3L) "three_one" else "two_one"
-      ),
-      uiOutput("background_boost_inputs"),
       uiOutput("final_score_preview"),
       uiOutput("points_status"),
       uiOutput("stats_error"),
@@ -1415,18 +2469,33 @@ selection_icon <- function(type) {
   }
 }
 
-skills_selection_ui <- function(class, background, selected = character()) {
+skills_selection_ui <- function(class, background, species,
+                                selected = character(),
+                                selected_species_skill = character()) {
   count <- skill_counts[[class]]
   background_skills <- background_rules[[background]]$skills
-  available_skills <- setdiff(skill_choices[[class]], background_skills)
+  species_skills <- species_skill_proficiencies(species, selected_species_skill)
+  automatic_skills <- unique(c(background_skills, species_skills))
+  available_skills <- setdiff(skill_choices[[class]], automatic_skills)
   div(
     class = "race-page",
-    h1(class = "race-heading", "Skills of the Trade...."),
-    h2(class = "race-subheading", paste("Choose", count, "class skills")),
+    h1(class = "race-heading selection-page-title", "Skills of the Trade...."),
+    h2(class = "race-subheading selection-page-subtitle",
+      paste("Choose", count, "class skills")),
     p(class = "race-prompt",
       paste("Choose", count, "skills from the options available to your", class,
-        "under the 2024 rules. Your background already grants",
-        paste(background_skills, collapse = " and "), ".")
+        "under the 2014 rules. Your background grants",
+        paste(background_skills, collapse = " and "),
+        if (identical(species, "Human") && length(species_skills)) {
+          paste0(" and your Variant Human race grants ", paste(species_skills, collapse = " and "))
+        } else if (identical(species, "Half-Elf")) {
+          paste0(" and your Half-Elf race grants ", paste(species_skills, collapse = " and "))
+        } else if (length(species_skills)) {
+          paste0(" and your Elf race grants ", paste(species_skills, collapse = " and "))
+        } else {
+          ""
+        },
+        ".")
     ),
     div(
       class = "race-options multi-options skill-options",
@@ -1440,6 +2509,7 @@ skills_selection_ui <- function(class, background, selected = character()) {
         selected = selected
       )
     ),
+    uiOutput("rogue_expertise_ui"),
     uiOutput("skills_error"),
     div(
       class = "race-actions",
@@ -1457,11 +2527,11 @@ spell_selection_ui <- function(class, selected_cantrips = character(),
   stats <- if (class %in% spellcasting_classes) spellcasting_stats(class, scores) else NULL
   div(
     class = "race-page",
-    h1(class = "race-heading", "Whispers of Power...."),
-    h2(class = "race-subheading", "Choose your starting spells"),
+    h1(class = "race-heading selection-page-title", "Whispers of Power...."),
+    h2(class = "race-subheading selection-page-subtitle", "Choose your starting spells"),
     if (class %in% spellcasting_classes) {
       p(class = "race-prompt",
-        "These are curated level-1 suggestions for the 2024 rules. Spell choices depend on class and ability scores; your table can adjust them."
+      "Choose from the 2014 Player's Handbook spell options available to your class."
       )
     } else {
       p(class = "race-prompt",
@@ -1470,7 +2540,7 @@ spell_selection_ui <- function(class, selected_cantrips = character(),
     },
     if (identical(class, "Wizard")) {
       p(class = "race-prompt",
-        "Wizard selections are recorded in the spellbook; daily prepared spells are not tracked here."
+        "Choose your spellbook entries, then mark the spells you have prepared for today."
       )
     },
     if (!is.null(stats)) {
@@ -1530,6 +2600,7 @@ spell_selection_ui <- function(class, selected_cantrips = character(),
         )
       )
     },
+    uiOutput("wizard_prepared_ui"),
     uiOutput("spells_error"),
     div(
       class = "race-actions",
@@ -1539,18 +2610,97 @@ spell_selection_ui <- function(class, selected_cantrips = character(),
   )
 }
 
-equipment_selection_ui <- function(selected = NULL) {
-  choice_selection_ui(
-    "Ready for the Road....",
-    "Choose your equipment",
-    "Select a preset pack for the journey from Rookhaven into the Blackwood.",
-    "selected_equipment",
-    equipment_options,
-    "equipment_error",
-    "back_to_spells",
-    "Back to Spells",
-    "confirm_equipment",
-    selected
+equipment_selection_ui <- function(selected = NULL, gear, class) {
+  if (is.null(selected) || !selected %in% names(equipment_options)) {
+    selected <- names(equipment_options)[[1]]
+  }
+  weapon_choices <- c("— none —" = "", names(weapon_profiles))
+  div(
+    class = "race-page",
+    h1(class = "race-heading selection-page-title", "Ready for the Road...."),
+    h2(class = "race-subheading selection-page-subtitle", "Choose your equipment"),
+    p(class = "race-prompt",
+      "Select a campaign pack, then record your worn armour, shield, attacks, inventory, and coins. The initial gear is a level-1 suggestion; check it against your table's choices."),
+    div(
+      class = "race-options",
+      radioButtons(
+        "selected_equipment",
+        label = NULL,
+        choiceNames = lapply(names(equipment_options), function(choice) {
+          tags$span(
+            tags$span(class = "race-name", choice),
+            tags$span(class = "race-blurb", unname(equipment_options[[choice]]))
+          )
+        }),
+        choiceValues = names(equipment_options),
+        selected = selected
+      )
+    ),
+    uiOutput("equipment_error"),
+    div(class = "panel-card details-panel gear-panel",
+      h3(class = "spell-group-title", "Worn gear and attacks"),
+      selectInput("equipped_armour", "Armour", names(armour_profiles),
+        selected = gear$armour),
+      checkboxInput("equipped_shield", "Wearing a shield (+2 AC)", gear$shield),
+      p(class = "text-muted",
+        "Armour training: check whether your class is proficient with your selected armour and shield. Unfamiliar armour can impose penalties under your table's rules."),
+      selectInput("equipped_weapons", "Weapons carried (up to three)",
+        choices = weapon_choices, selected = gear$weapons, multiple = TRUE),
+      textAreaInput("inventory", "Inventory and carried gear",
+        value = gear$inventory, rows = 5, width = "100%"),
+      h3(class = "spell-group-title", "Coins and hit points"),
+      div(class = "stats-grid coin-grid",
+        numericInput("coin_cp", "Copper (CP)", gear$cp, min = 0, step = 1),
+        numericInput("coin_sp", "Silver (SP)", gear$sp, min = 0, step = 1),
+        numericInput("coin_ep", "Electrum (EP)", gear$ep, min = 0, step = 1),
+        numericInput("coin_gp", "Gold (GP)", gear$gp, min = 0, step = 1),
+        numericInput("coin_pp", "Platinum (PP)", gear$pp, min = 0, step = 1)
+      ),
+      div(class = "stats-grid",
+        numericInput("spell_slots_remaining", "Spell slots remaining",
+          gear$spell_slots_remaining, min = 0,
+          max = class_rules[[class]]$slots, step = 1),
+        numericInput("current_hp", "Current HP", gear$current_hp, min = 0, step = 1),
+        numericInput("temporary_hp", "Temporary HP", gear$temporary_hp, min = 0, step = 1),
+        numericInput("death_successes", "Death save successes", gear$death_successes, min = 0, max = 3, step = 1),
+        numericInput("death_failures", "Death save failures", gear$death_failures, min = 0, max = 3, step = 1)
+      )
+    ),
+    div(
+      class = "race-actions",
+      actionButton("back_to_spells", "Back to Spells", class = "btn-default race-back"),
+      actionButton("confirm_equipment", "Continue", class = "btn-primary begin-button")
+    )
+  )
+}
+
+character_identity_ui <- function(details) {
+  div(
+    class = "details-page",
+    h1(class = "race-heading", "Beyond the Numbers...."),
+    h2(class = "race-subheading", "Give your character a life"),
+    p(class = "race-prompt",
+      "Record the details that help you bring this adventurer to the table. These are optional and can be edited in your save file."),
+    div(class = "panel-card details-panel identity-panel",
+      textInput("pronouns", "Pronouns", detail_value(details, "pronouns")),
+      textInput("age", "Age", detail_value(details, "age")),
+      textInput("height", "Height", detail_value(details, "height")),
+      textInput("eyes", "Eye colour", detail_value(details, "eyes")),
+      textInput("hair", "Hair", detail_value(details, "hair")),
+      textAreaInput("appearance", "Appearance", detail_value(details, "appearance"), rows = 2),
+      textAreaInput("personality", "Personality", detail_value(details, "personality"), rows = 2),
+      textAreaInput("ideals", "Ideals", detail_value(details, "ideals"), rows = 2),
+      textAreaInput("bonds", "Bonds", detail_value(details, "bonds"), rows = 2),
+      textAreaInput("flaws", "Flaws", detail_value(details, "flaws"), rows = 2),
+      textAreaInput("backstory", "Backstory", detail_value(details, "backstory"), rows = 4),
+      textInput("languages", "Languages", detail_value(details, "languages"),
+        placeholder = "e.g. Common, Elvish"),
+      textAreaInput("notes", "Other notes", detail_value(details, "notes"), rows = 3),
+      div(class = "race-actions",
+        actionButton("back_to_equipment", "Back to Equipment", class = "btn-default race-back"),
+        actionButton("confirm_identity", "View Character Sheet", class = "btn-primary begin-button")
+      )
+    )
   )
 }
 
@@ -1572,33 +2722,8 @@ character_overview_ui <- function() {
     div(class = "panel-card overview-panel", uiOutput("character_sheet")),
     uiOutput("download_ui"),
     div(
-      class = "panel-card party-save-panel",
-      h3(class = "section-title", "Email a Copy to Your Party"),
-      p("Email a PDF copy of this character sheet to yourself and the DM. This is optional; use Save PDF above to keep a copy on your device."),
-      tags$div(
-        class = "form-group",
-        tags$label(`for` = "player_email", "Your email address"),
-        tags$input(
-          id = "player_email",
-          name = "player_email",
-          type = "email",
-          class = "form-control shiny-input-text",
-          autocomplete = "email",
-          placeholder = "you@example.com",
-          required = "required"
-        )
-      ),
-      p(class = "text-muted",
-        "Your email is used only to send the PDF. Character details are emailed to you and the DM; the app does not save a roster."
-      ),
-      actionButton("submit_character", "Email PDF to Me & the DM",
-        class = "btn-primary begin-button"),
-      uiOutput("party_save_setup"),
-      uiOutput("party_save_status")
-    ),
-    div(
       class = "overview-actions",
-      actionButton("back_to_equipment", "Back to Equipment", class = "btn-default race-back")
+      actionButton("back_to_identity", "Back to Details", class = "btn-default race-back")
     )
   )
 }
@@ -1606,31 +2731,81 @@ character_overview_ui <- function() {
 server <- function(input, output, session) {
   current_screen <- reactiveVal("intro")
   chosen_species <- reactiveVal(NULL)
+  chosen_subrace <- reactiveVal(NULL)
+  chosen_race_choices <- reactiveVal(list())
   chosen_class <- reactiveVal(NULL)
   chosen_background <- reactiveVal(NULL)
+  chosen_background_choices <- reactiveVal(list())
   chosen_scores <- reactiveVal(default_scores)
   chosen_ability_increases <- reactiveVal(NULL)
   chosen_skills <- reactiveVal(character())
+  chosen_expertise <- reactiveVal(character())
+  chosen_species_skill <- reactiveVal(character())
   chosen_cantrips <- reactiveVal(character())
   chosen_spells <- reactiveVal(character())
+  chosen_prepared_spells <- reactiveVal(character())
   chosen_equipment <- reactiveVal(names(equipment_options)[[1]])
+  character_gear <- reactiveVal(NULL)
   saved_details <- reactiveVal(list())
   load_message <- reactiveVal(NULL)
-  party_save_status <- reactiveVal(NULL)
-  party_save_pending <- reactiveVal(FALSE)
-  party_submission_id <- reactiveVal(NULL)
-  save_endpoint <- trimws(Sys.getenv("CHARACTER_SAVE_ENDPOINT"))
-  save_token <- Sys.getenv("CHARACTER_SAVE_TOKEN")
 
   current_detail <- function(name, default = "") {
     value_or(input[[name]], detail_value(saved_details(), name, default))
   }
 
   collect_details <- function() {
-    list(
-      character_name = current_detail("character_name"),
-      alignment = current_detail("alignment", "Unspecified")
+    fields <- c("character_name", "alignment", "pronouns", "age", "height",
+      "eyes", "hair", "appearance", "personality", "ideals", "bonds", "flaws",
+      "backstory", "languages", "notes")
+    defaults <- list(alignment = "Unspecified")
+    values <- lapply(fields, function(field) {
+      current_detail(field, value_or(defaults[[field]], ""))
+    })
+    names(values) <- fields
+    values
+  }
+
+  current_gear <- function() {
+    gear <- character_gear()
+    if (is.null(gear) && !is.null(chosen_class()) && !is.null(chosen_background()) &&
+        !is.null(chosen_species())) {
+      gear <- default_character_gear(chosen_class(), chosen_background(),
+        chosen_species(), final_scores(), chosen_subrace())
+    }
+    gear
+  }
+
+  mage_armour_available <- function() {
+    "Mage Armor" %in% chosen_spells() &&
+      (!identical(chosen_class(), "Wizard") ||
+        "Mage Armor" %in% chosen_prepared_spells())
+  }
+
+  collect_gear <- function() {
+    gear <- current_gear()
+    values <- list(
+      armour = value_or(input$equipped_armour, gear$armour),
+      shield = value_or(input$equipped_shield, gear$shield),
+      weapons = value_or(input$equipped_weapons, gear$weapons),
+      inventory = value_or(input$inventory, gear$inventory)
     )
+    values$weapons <- values$weapons[nzchar(values$weapons)]
+    for (field in c("cp", "sp", "ep", "gp", "pp")) {
+      values[[field]] <- value_or(input[[paste0("coin_", field)]], gear[[field]])
+    }
+    values$current_hp <- value_or(input$current_hp, gear$current_hp)
+    values$temporary_hp <- value_or(input$temporary_hp, gear$temporary_hp)
+    values$spell_slots_remaining <- value_or(input$spell_slots_remaining,
+      gear$spell_slots_remaining)
+    values$death_successes <- value_or(input$death_successes, gear$death_successes)
+    values$death_failures <- value_or(input$death_failures, gear$death_failures)
+    values
+  }
+
+  update_saved_details <- function() {
+    details <- collect_details()
+    saved_details(details)
+    details
   }
 
   output$app_screen <- renderUI({
@@ -1638,22 +2813,142 @@ server <- function(input, output, session) {
       current_screen(),
       intro = introduction_ui(),
       load = load_character_ui(),
-      race = race_selection_ui(chosen_species()),
+      race = race_selection_ui(chosen_species(), chosen_subrace(),
+        chosen_race_choices()),
       class = class_selection_ui(chosen_class()),
       background = background_selection_ui(chosen_background()),
       stats = stats_selection_ui(chosen_scores(), chosen_background(),
-        value_or(chosen_ability_increases(),
-          default_ability_increases(chosen_background(), chosen_scores()))),
+        chosen_species(), chosen_subrace(), chosen_race_choices(), chosen_class()),
       name = character_name_ui(saved_details()),
       alignment = alignment_selection_ui(detail_value(saved_details(), "alignment", "Unspecified")),
-      skills = skills_selection_ui(chosen_class(), chosen_background(), chosen_skills()),
+      skills = skills_selection_ui(chosen_class(), chosen_background(),
+        chosen_species(), chosen_skills(), chosen_species_skill()),
       spells = spell_selection_ui(
         chosen_class(), chosen_cantrips(), chosen_spells(),
         spell_selection_limits(chosen_class(), final_scores()),
         final_scores()
       ),
-      equipment = equipment_selection_ui(chosen_equipment()),
+      equipment = equipment_selection_ui(chosen_equipment(), current_gear(),
+        chosen_class()),
+      identity = character_identity_ui(saved_details()),
       summary = character_overview_ui()
+    )
+  })
+
+  current_race_choices <- function(race, subrace) {
+    choices <- if (identical(race, chosen_species()) &&
+        identical(subrace, chosen_subrace())) chosen_race_choices() else list()
+    if (identical(race, "Human") && identical(subrace, "Variant Human")) {
+      choices$ability_names <- value_or(input$variant_abilities, choices$ability_names)
+      choices$skill <- value_or(input$variant_skill, choices$skill)
+      choices$feat <- value_or(input$variant_feat, choices$feat)
+      if (length(choices$ability_names) == 2L &&
+          all(choices$ability_names %in% names(ability_scores))) {
+        choices$ability_bonuses <- setNames(rep(1L, 2L),
+          unname(ability_scores[choices$ability_names]))
+      }
+    } else if (identical(race, "Human") && identical(subrace, "Human")) {
+      choices$language <- value_or(input$human_language, choices$language)
+    } else if (identical(race, "Dwarf")) {
+      choices$tool <- value_or(input$dwarf_tool, choices$tool)
+    } else if (identical(race, "Elf") && identical(subrace, "High Elf")) {
+      choices$cantrip <- value_or(input$high_elf_cantrip, choices$cantrip)
+    } else if (identical(race, "Dragonborn")) {
+      choices$draconic_ancestry <- value_or(input$draconic_ancestry,
+        choices$draconic_ancestry)
+    } else if (identical(race, "Half-Elf")) {
+      choices$ability_names <- value_or(input$half_elf_abilities, choices$ability_names)
+      choices$skills <- value_or(input$half_elf_skills, choices$skills)
+      if (length(choices$ability_names) == 2L &&
+          all(choices$ability_names %in% setdiff(names(ability_scores), "Charisma"))) {
+        choices$ability_bonuses <- setNames(rep(1L, 2L),
+          unname(ability_scores[choices$ability_names]))
+      }
+    }
+    choices
+  }
+
+  current_background_choices <- function(background) {
+    choices <- if (identical(background, chosen_background())) {
+      chosen_background_choices()
+    } else {
+      list()
+    }
+    defaults <- default_background_choices(background)
+    fields <- c(
+      languages = "background_languages",
+      artisan_tool = "background_artisan_tool",
+      gaming_set = "background_gaming_set",
+      instrument = "background_instrument",
+      con_tools = "background_con_tools"
+    )
+    for (field in names(fields)) {
+      selected <- value_or(input[[fields[[field]]]], choices[[field]])
+      if (is.null(selected)) selected <- defaults[[field]]
+      if (!is.null(selected)) choices[[field]] <- selected
+    }
+    language_count <- background_choice_rules[[background]]$languages
+    if (!is.null(language_count) &&
+        (length(choices$languages) != language_count ||
+          anyDuplicated(choices$languages))) {
+      choices$languages <- defaults$languages
+    }
+    choices
+  }
+
+  output$background_options_ui <- renderUI({
+    background <- value_or(input$selected_background, chosen_background())
+    if (is.null(background) || !background %in% names(background_rules)) return(NULL)
+    background_choice_inputs_ui(background,
+      current_background_choices(background))
+  })
+
+  output$race_options_ui <- renderUI({
+    race <- value_or(input$selected_race, chosen_species())
+    if (is.null(race) || !race %in% names(race_subraces)) return(NULL)
+    subrace <- value_or(input$selected_subrace, chosen_subrace())
+    if (is.null(subrace) || !subrace %in% race_subraces[[race]]) {
+      subrace <- default_subrace(race)
+    }
+    race_option_inputs_ui(race, subrace,
+      current_race_choices(race, subrace))
+  })
+
+  output$race_benefits <- renderUI({
+    race <- value_or(input$selected_race, chosen_species())
+    if (is.null(race) || !race %in% names(race_subraces)) return(NULL)
+    subrace <- value_or(input$selected_subrace, chosen_subrace())
+    if (is.null(subrace) || !subrace %in% race_subraces[[race]]) {
+      subrace <- default_subrace(race)
+    }
+    choices <- current_race_choices(race, subrace)
+    traits <- race_trait_summary(race, subrace, choices)
+    tagList(
+      p(class = "text-muted", paste(race, "—", subrace,
+        "·", race_size(race, subrace), "·", race_walking_speed(race, subrace), "ft. speed")),
+      tags$ul(lapply(traits, tags$li))
+    )
+  })
+
+  output$wizard_prepared_ui <- renderUI({
+    if (!identical(chosen_class(), "Wizard") || current_screen() != "spells") return(NULL)
+    selected_spells <- value_or(input$selected_spells, chosen_spells())
+    selected_spells <- intersect(selected_spells, spell_choices$Wizard)
+    if (!length(selected_spells)) {
+      return(p(class = "race-prompt", "Choose spellbook spells to mark today's prepared spells."))
+    }
+    limit <- min(spell_prepared_limit("Wizard", final_scores()), length(selected_spells))
+    selected_prepared <- value_or(input$wizard_prepared_spells, chosen_prepared_spells())
+    selected_prepared <- intersect(selected_prepared, selected_spells)
+    if (!length(selected_prepared)) selected_prepared <- head(selected_spells, limit)
+    tagList(
+      h3(class = "spell-group-title", paste("Prepare", limit, "spells for today")),
+      checkboxGroupInput(
+        "wizard_prepared_spells",
+        label = NULL,
+        choices = selected_spells,
+        selected = selected_prepared
+      )
     )
   })
 
@@ -1662,20 +2957,6 @@ server <- function(input, output, session) {
     if (is.null(message)) return(NULL)
     class <- if (startsWith(message, "Character loaded.")) "text-success" else "text-warning"
     div(class = class, message)
-  })
-
-  output$party_save_setup <- renderUI({
-    if (nzchar(save_endpoint) && nzchar(save_token)) return(NULL)
-    div(class = "text-warning",
-      "PDF email isn't connected yet. The DM must configure the email service endpoint."
-    )
-  })
-
-  output$party_save_status <- renderUI({
-    status <- party_save_status()
-    if (is.null(status)) return(NULL)
-    div(class = if (isTRUE(status$ok)) "text-success" else "text-danger",
-      status$message)
   })
 
   observeEvent(input$load_character_file, {
@@ -1688,14 +2969,21 @@ server <- function(input, output, session) {
       payload <- jsonlite::fromJSON(file$datapath, simplifyVector = FALSE)
       character <- validate_character_payload(payload)
       chosen_species(character$species)
+      chosen_subrace(character$subrace)
+      chosen_race_choices(character$race_choices)
       chosen_class(character$class)
       chosen_background(character$background_choice)
+      chosen_background_choices(character$background_choices)
       chosen_scores(character$ability_scores)
-      chosen_ability_increases(character$ability_increases)
+      chosen_ability_increases(integer())
       chosen_skills(character$skills)
+      chosen_expertise(character$expertise)
+      chosen_species_skill(character$species_skill)
       chosen_cantrips(character$cantrips)
       chosen_spells(character$spells)
+      chosen_prepared_spells(character$prepared_spells)
       chosen_equipment(character$equipment)
+      character_gear(character$gear)
       saved_details(character$details)
       current_screen("summary")
       load_message("Character loaded. You can review it or go back to make changes.")
@@ -1723,15 +3011,49 @@ server <- function(input, output, session) {
 
   output$race_error <- renderUI({
     if (current_screen() == "race" &&
-        !is.null(input$confirm_race) && input$confirm_race > 0 &&
-        (is.null(input$selected_race) || !nzchar(input$selected_race))) {
-      div(class = "text-warning text-center", "Choose an ancestry before continuing.")
+        !is.null(input$confirm_race) && input$confirm_race > 0) {
+      race <- input$selected_race
+      subrace <- input$selected_subrace
+      valid <- !is.null(race) && race %in% names(race_subraces) &&
+        !is.null(subrace) && subrace %in% race_subraces[[race]]
+      if (!valid) {
+        return(div(class = "text-warning text-center",
+          "Complete the required race and subrace choices before continuing."))
+      }
+      result <- tryCatch(
+        normalise_race_choices(race, subrace,
+          current_race_choices(race, subrace)),
+        error = function(error) error
+      )
+      if (inherits(result, "error")) {
+        return(div(class = "text-warning text-center",
+          conditionMessage(result)))
+      }
     }
+    NULL
   })
 
   observeEvent(input$confirm_race, {
-    if (is.null(input$selected_race) || !nzchar(input$selected_race)) return()
-    chosen_species(input$selected_race)
+    race <- input$selected_race
+    subrace <- input$selected_subrace
+    if (is.null(race) || !race %in% names(race_subraces) ||
+        is.null(subrace) || !subrace %in% race_subraces[[race]]) return()
+    choices <- tryCatch(
+      normalise_race_choices(race, subrace,
+        current_race_choices(race, subrace)),
+      error = function(error) NULL
+    )
+    if (is.null(choices)) return()
+    chosen_species(race)
+    chosen_subrace(subrace)
+    chosen_race_choices(choices)
+    chosen_species_skill(if (identical(subrace, "Variant Human")) {
+      choices$skill
+    } else if (identical(race, "Half-Elf")) {
+      choices$skills
+    } else {
+      character()
+    })
     current_screen("class")
   })
 
@@ -1750,9 +3072,12 @@ server <- function(input, output, session) {
   observeEvent(input$confirm_class, {
     if (is.null(input$selected_class) || !nzchar(input$selected_class)) return()
     if (!identical(chosen_class(), input$selected_class)) {
+      chosen_scores(suggested_ability_scores(input$selected_class))
       chosen_skills(character())
+      chosen_expertise(character())
       chosen_cantrips(character())
       chosen_spells(character())
+      chosen_prepared_spells(character())
     }
     chosen_class(input$selected_class)
     current_screen("background")
@@ -1764,21 +3089,41 @@ server <- function(input, output, session) {
 
   output$background_error <- renderUI({
     if (current_screen() == "background" &&
-        !is.null(input$confirm_background) && input$confirm_background > 0 &&
-        (is.null(input$selected_background) ||
-          !input$selected_background %in% names(background_rules))) {
-      div(class = "text-warning text-center", "Choose a background before continuing.")
+        !is.null(input$confirm_background) && input$confirm_background > 0) {
+      background <- input$selected_background
+      if (is.null(background) || !background %in% names(background_rules)) {
+        return(div(class = "text-warning text-center",
+          "Choose a background before continuing."))
+      }
+      result <- tryCatch(
+        normalise_background_choices(background,
+          current_background_choices(background)),
+        error = function(error) error
+      )
+      if (inherits(result, "error")) {
+        return(div(class = "text-warning text-center",
+          conditionMessage(result)))
+      }
     }
+    NULL
   })
 
   observeEvent(input$confirm_background, {
     if (is.null(input$selected_background) ||
         !input$selected_background %in% names(background_rules)) return()
+    choices <- tryCatch(
+      normalise_background_choices(input$selected_background,
+        current_background_choices(input$selected_background)),
+      error = function(error) NULL
+    )
+    if (is.null(choices)) return()
     chosen_background(input$selected_background)
-    chosen_ability_increases(default_ability_increases(
-      input$selected_background, chosen_scores()
-    ))
+    chosen_background_choices(choices)
+    chosen_ability_increases(integer())
     chosen_skills(character())
+    chosen_expertise(character())
+    character_gear(default_character_gear(chosen_class(), input$selected_background,
+      chosen_species(), final_scores(), chosen_subrace()))
     current_screen("stats")
   })
 
@@ -1795,28 +3140,20 @@ server <- function(input, output, session) {
     scores
   })
 
-  collect_ability_increases <- function() {
-    allowed <- background_rules[[chosen_background()]]$abilities
-    mode <- value_or(input$background_bonus_mode,
-      if (length(chosen_ability_increases()) == 3L) "three_one" else "two_one")
-    if (identical(mode, "two_one")) {
-      scores <- c(input$background_boost_two, input$background_boost_one)
-      if (anyNA(scores) || any(!scores %in% allowed) || anyDuplicated(scores)) return(NULL)
-      return(setNames(c(2L, 1L), scores))
+  observeEvent(input$apply_suggested_scores, {
+    scores <- suggested_ability_scores(chosen_class())
+    chosen_scores(scores)
+    for (score_id in unname(ability_scores)) {
+      updateSliderInput(session, score_id, value = scores[[score_id]])
     }
-    if (identical(mode, "three_one")) {
-      scores <- c(input$background_boost_three_1, input$background_boost_three_2,
-        input$background_boost_three_3)
-      if (anyNA(scores) || any(!scores %in% allowed) || anyDuplicated(scores)) return(NULL)
-      return(setNames(rep(1L, 3L), scores))
-    }
-    NULL
-  }
+  })
 
   final_scores <- reactive({
-    increases <- chosen_ability_increases()
-    if (is.null(increases)) return(chosen_scores())
-    apply_ability_increases(chosen_scores(), increases)
+    scores <- chosen_scores()
+    if (is.null(chosen_species()) || is.null(chosen_subrace())) return(scores)
+    bonuses <- racial_ability_bonuses(chosen_species(), chosen_subrace(),
+      chosen_race_choices())
+    scores + bonuses
   })
 
   points_spent <- reactive({
@@ -1825,43 +3162,14 @@ server <- function(input, output, session) {
     sum(score_costs[as.character(scores)])
   })
 
-  output$background_boost_inputs <- renderUI({
-    allowed <- background_rules[[chosen_background()]]$abilities
-    choices <- setNames(allowed, allowed)
-    increases <- value_or(chosen_ability_increases(),
-      default_ability_increases(chosen_background(), chosen_scores()))
-    mode <- value_or(input$background_bonus_mode,
-      if (length(increases) == 3L) "three_one" else "two_one")
-    if (identical(mode, "two_one")) {
-      selected_two <- names(increases)[which(increases == 2L)]
-      selected_one <- names(increases)[which(increases == 1L)]
-      return(tagList(
-        selectInput("background_boost_two", "Increase by +2", choices,
-          selected = if (length(selected_two)) selected_two[[1]] else character()),
-        selectInput("background_boost_one", "Increase by +1", choices,
-          selected = if (length(selected_one)) selected_one[[1]] else character())
-      ))
-    }
-    selected <- names(increases)
-    tagList(lapply(seq_len(3L), function(i) {
-      selectInput(
-        paste0("background_boost_three_", i),
-        paste("Increase by +1 (ability", i, ")"),
-        choices,
-        selected = if (length(selected) >= i) selected[[i]] else character()
-      )
-    }))
-  })
-
   output$final_score_preview <- renderUI({
     scores <- score_values()
-    increases <- collect_ability_increases()
-    if (is.null(increases)) increases <- chosen_ability_increases()
-    if (is.null(increases)) return(NULL)
-    final <- apply_ability_increases(scores, increases)
+    bonuses <- racial_ability_bonuses(chosen_species(), chosen_subrace(),
+      chosen_race_choices())
+    final <- scores + bonuses
     div(
       class = "points-total text-center",
-      paste("Scores after background increases:",
+      paste("Scores after racial increases:",
         paste(paste(names(ability_scores), final[unname(ability_scores)]),
           collapse = " · ")
       )
@@ -1899,20 +3207,16 @@ server <- function(input, output, session) {
       if (points > 27) {
         return(div(class = "text-danger text-center", "Reduce your scores to fit the 27-point budget."))
       }
-      if (is.null(collect_ability_increases())) {
-        return(div(class = "text-warning text-center",
-          "Choose distinct abilities for your background increases."
-        ))
-      }
     }
   })
 
   observeEvent(input$confirm_stats, {
     points <- points_spent()
-    increases <- collect_ability_increases()
-    if (is.na(points) || points > 27 || is.null(increases)) return()
+    if (is.na(points) || points > 27) return()
     chosen_scores(score_values())
-    chosen_ability_increases(increases)
+    chosen_ability_increases(integer())
+    character_gear(default_character_gear(chosen_class(), chosen_background(),
+      chosen_species(), final_scores(), chosen_subrace()))
     current_screen("alignment")
   })
 
@@ -1965,25 +3269,63 @@ server <- function(input, output, session) {
   })
 
   output$skills_error <- renderUI({
+    automatic_skills <- unique(c(background_rules[[chosen_background()]]$skills,
+      species_skill_proficiencies(chosen_species(), chosen_species_skill())))
     available_skills <- setdiff(skill_choices[[chosen_class()]],
-      background_rules[[chosen_background()]]$skills)
+      automatic_skills)
     if (current_screen() == "skills" &&
         !is.null(input$confirm_skills) && input$confirm_skills > 0 &&
         (length(input$selected_skills) != skill_counts[[chosen_class()]] ||
-          any(!input$selected_skills %in% available_skills))) {
+          any(!input$selected_skills %in% available_skills) ||
+          (identical(chosen_class(), "Rogue") &&
+            length(value_or(input$rogue_expertise, character())) != 2L))) {
       div(class = "text-warning text-center",
-        paste("Choose exactly", skill_counts[[chosen_class()]], "class skills.")
+        if (identical(chosen_class(), "Rogue")) {
+          "Choose the required class skills and exactly two proficient skills for Expertise."
+        } else {
+          paste("Choose exactly", skill_counts[[chosen_class()]], "class skills.")
+        }
       )
     }
   })
 
+  output$rogue_expertise_ui <- renderUI({
+    if (!identical(chosen_class(), "Rogue") || current_screen() != "skills") return(NULL)
+    proficient <- unique(c(background_rules[[chosen_background()]]$skills,
+      species_skill_proficiencies(chosen_species(), chosen_species_skill()),
+      value_or(input$selected_skills, chosen_skills())))
+    selected <- intersect(value_or(input$rogue_expertise, chosen_expertise()), proficient)
+    if (!length(selected)) selected <- head(proficient, 2L)
+    tagList(
+      h3(class = "spell-group-title", "Choose two skills for Expertise"),
+      p(class = "race-prompt",
+        "Your proficiency bonus is doubled for these two skills."),
+      checkboxGroupInput("rogue_expertise", label = NULL, choices = proficient,
+        selected = selected)
+    )
+  })
+
   observeEvent(input$confirm_skills, {
     skills <- value_or(input$selected_skills, character())
-    available_skills <- setdiff(skill_choices[[chosen_class()]],
-      background_rules[[chosen_background()]]$skills)
+    fixed_skills <- unique(c(background_rules[[chosen_background()]]$skills,
+      species_skill_proficiencies(chosen_species(), chosen_species_skill())))
+    available_skills <- setdiff(skill_choices[[chosen_class()]], fixed_skills)
     if (length(skills) != skill_counts[[chosen_class()]] ||
         any(!skills %in% available_skills)) return()
+    species_skill <- chosen_species_skill()
+    automatic_skills <- unique(c(background_rules[[chosen_background()]]$skills,
+      species_skill_proficiencies(chosen_species(), species_skill)))
+    expertise <- character()
+    if (identical(chosen_class(), "Rogue")) {
+      expertise <- value_or(input$rogue_expertise, head(unique(c(
+        automatic_skills, skills
+      )), 2L))
+      if (length(expertise) != 2L || anyDuplicated(expertise) ||
+          any(!expertise %in% c(automatic_skills, skills))) return()
+    }
     chosen_skills(skills)
+    chosen_expertise(expertise)
+    chosen_species_skill(species_skill)
     current_screen("spells")
   })
 
@@ -2009,6 +3351,15 @@ server <- function(input, output, session) {
           paste("Choose exactly", limits$spells, limits$spell_label, ".")
         ))
       }
+      if (identical(chosen_class(), "Wizard")) {
+        prepared <- intersect(value_or(input$wizard_prepared_spells, character()), spells)
+        expected <- min(spell_prepared_limit("Wizard", final_scores()), length(spells))
+        if (length(prepared) != expected) {
+          return(div(class = "text-warning text-center",
+            paste("Prepare exactly", expected, "spells for today.")
+          ))
+        }
+      }
     }
   })
 
@@ -2026,116 +3377,110 @@ server <- function(input, output, session) {
         any(!cantrips %in% valid_cantrips) ||
         length(spells) != limits$spells ||
         any(!spells %in% valid_spells)) return()
+    prepared <- character()
+    if (identical(chosen_class(), "Wizard")) {
+      prepared <- value_or(input$wizard_prepared_spells,
+        head(spells, min(spell_prepared_limit("Wizard", final_scores()),
+          length(spells))))
+      expected <- min(spell_prepared_limit("Wizard", final_scores()),
+        length(spells))
+      if (length(prepared) != expected || anyDuplicated(prepared) ||
+          any(!prepared %in% spells)) return()
+    }
     chosen_cantrips(cantrips)
     chosen_spells(spells)
+    if (identical(chosen_class(), "Wizard")) {
+      chosen_prepared_spells(prepared)
+    } else if (chosen_class() %in% c("Cleric", "Druid", "Paladin", "Ranger")) {
+      chosen_prepared_spells(spells)
+    } else {
+      chosen_prepared_spells(character())
+    }
     current_screen("equipment")
   })
 
   observeEvent(input$back_to_spells, {
+    if (!is.null(chosen_class()) && !is.null(chosen_background())) {
+      character_gear(collect_gear())
+      if (!is.null(input$selected_equipment) &&
+          input$selected_equipment %in% names(equipment_options)) {
+        chosen_equipment(input$selected_equipment)
+      }
+    }
     current_screen("spells")
   })
 
   output$equipment_error <- renderUI({
-    if (current_screen() == "equipment" &&
-        !is.null(input$confirm_equipment) && input$confirm_equipment > 0 &&
-        (is.null(input$selected_equipment) || !nzchar(input$selected_equipment))) {
-      div(class = "text-warning text-center", "Choose an equipment pack before continuing.")
+    if (current_screen() != "equipment" || is.null(input$confirm_equipment) ||
+        input$confirm_equipment == 0) return(NULL)
+    gear <- collect_gear()
+    if (is.null(input$selected_equipment) ||
+        !input$selected_equipment %in% names(equipment_options)) {
+      return(div(class = "text-warning text-center", "Choose an equipment pack before continuing."))
     }
+    if (length(gear$weapons) > 3L ||
+        any(!gear$weapons %in% names(weapon_profiles))) {
+      return(div(class = "text-warning text-center", "Choose no more than three valid weapons."))
+    }
+    numeric_fields <- c("cp", "sp", "ep", "gp", "pp", "current_hp",
+      "temporary_hp", "spell_slots_remaining", "death_successes", "death_failures")
+    invalid <- vapply(numeric_fields, function(field) {
+      value <- gear[[field]]
+      is.null(value) || length(value) != 1L || !is.numeric(value) ||
+        !is.finite(value) ||
+        value < 0 || value != as.integer(value) ||
+        (field %in% c("death_successes", "death_failures") && value > 3L) ||
+        (field == "spell_slots_remaining" &&
+          value > class_rules[[chosen_class()]]$slots)
+    }, logical(1))
+    if (any(invalid)) {
+      return(div(class = "text-warning text-center",
+        "Coins, hit points, and spell slots must be whole numbers; death saves must be 0–3 and spell slots cannot exceed your class maximum."))
+    }
+    if (identical(gear$armour, "Mage Armour") &&
+        !mage_armour_available()) {
+      return(div(class = "text-warning text-center",
+        "Mage Armour requires Mage Armor to be available (and prepared for a Wizard)."))
+    }
+    NULL
   })
 
   observeEvent(input$confirm_equipment, {
-    if (is.null(input$selected_equipment) || !nzchar(input$selected_equipment)) return()
+    gear <- collect_gear()
+    numeric_fields <- c("cp", "sp", "ep", "gp", "pp", "current_hp",
+      "temporary_hp", "spell_slots_remaining", "death_successes", "death_failures")
+    invalid <- vapply(numeric_fields, function(field) {
+      value <- gear[[field]]
+      is.null(value) || length(value) != 1L || !is.numeric(value) ||
+        !is.finite(value) || value < 0 || value != as.integer(value) ||
+        (field %in% c("death_successes", "death_failures") && value > 3L) ||
+        (field == "spell_slots_remaining" &&
+          value > class_rules[[chosen_class()]]$slots)
+    }, logical(1))
+    if (is.null(input$selected_equipment) ||
+        !input$selected_equipment %in% names(equipment_options) ||
+        length(gear$weapons) > 3L ||
+        any(!gear$weapons %in% names(weapon_profiles)) || any(invalid) ||
+        (identical(gear$armour, "Mage Armour") &&
+          !mage_armour_available())) return()
     chosen_equipment(input$selected_equipment)
-    current_screen("summary")
+    character_gear(normalise_character_gear(gear, chosen_class(),
+      chosen_background(), chosen_species(), final_scores(), chosen_subrace()))
+    current_screen("identity")
   })
 
   observeEvent(input$back_to_equipment, {
+    update_saved_details()
     current_screen("equipment")
   })
 
-  observeEvent(input$submit_character, {
-    if (isTRUE(party_save_pending())) return()
-    party_save_status(NULL)
-    if (!character_is_valid()) {
-      party_save_status(list(ok = FALSE,
-        message = "Finish the character details before saving."))
-      return()
-    }
-    email <- trimws(value_or(input$player_email, ""))
-    if (!grepl("^[^[:space:]@]+@[^[:space:]@]+\\.[^[:space:]@]+$", email)) {
-      party_save_status(list(ok = FALSE,
-        message = "Enter a valid email address to receive your character sheet."))
-      return()
-    }
-    if (!nzchar(save_endpoint) || !nzchar(save_token)) {
-      party_save_status(list(ok = FALSE,
-        message = "PDF email isn't configured yet. Contact the DM to finish the email service setup."))
-      return()
-    }
+  observeEvent(input$back_to_identity, {
+    current_screen("identity")
+  })
 
-    details <- list(
-      character_name = current_detail("character_name"),
-      alignment = current_detail("alignment", "Unspecified")
-    )
-    sheet_lines <- character_sheet_lines(
-      chosen_species(), chosen_class(), chosen_background(), chosen_scores(),
-      chosen_ability_increases(), details, chosen_skills(), chosen_cantrips(),
-      chosen_spells(), chosen_equipment()
-    )
-    submission_id <- value_or(party_submission_id(), NULL)
-    if (is.null(submission_id)) {
-      submission_id <- paste0(
-        format(Sys.time(), "%Y%m%d%H%M%S"),
-        "-",
-        paste(sample(c(letters, 0:9), 32, replace = TRUE), collapse = "")
-      )
-      party_submission_id(submission_id)
-    }
-    request_body <- list(
-      token = save_token,
-      submission_id = submission_id,
-      player_email = email,
-      character_name = details$character_name,
-      character_sheet = paste(sheet_lines, collapse = "\n")
-    )
-
-    party_save_pending(TRUE)
-    party_save_status(list(ok = TRUE, message = "Sending character to the DM and emailing your copy..."))
-    on.exit(party_save_pending(FALSE), add = TRUE)
-    result <- withProgress(message = "Saving your character", value = 0, {
-      tryCatch({
-        response <- httr::POST(
-          save_endpoint,
-          body = request_body,
-          encode = "json",
-          httr::timeout(30)
-        )
-        response_text <- httr::content(response, as = "text", encoding = "UTF-8")
-        service_result <- tryCatch(
-          jsonlite::fromJSON(response_text, simplifyVector = FALSE),
-          error = function(error) NULL
-        )
-        if (httr::http_error(response)) {
-          stop(paste("The save service returned HTTP", httr::status_code(response), "."),
-            call. = FALSE)
-        }
-        if (is.null(service_result)) {
-          stop("The save service returned an unreadable response. You can retry safely.",
-            call. = FALSE)
-        }
-        if (!isTRUE(service_result$ok)) {
-          stop(value_or(service_result$message,
-            "The save service could not save this character."), call. = FALSE)
-        }
-        list(ok = TRUE,
-          message = paste0("PDF emailed to you (", email, ") and the DM."))
-      }, error = function(error) {
-        list(ok = FALSE,
-          message = paste("Couldn't save the character:", conditionMessage(error)))
-      })
-    })
-    party_save_status(result)
-    if (isTRUE(result$ok)) party_submission_id(NULL)
+  observeEvent(input$confirm_identity, {
+    update_saved_details()
+    current_screen("summary")
   })
 
   output$character_sheet <- renderUI({
@@ -2147,61 +3492,193 @@ server <- function(input, output, session) {
       return(p("Spend no more than 27 points to preview this character.", class = "text-danger"))
     }
 
-    section <- function(label, value) {
+    details <- collect_details()
+    gear <- current_gear()
+    scores <- final_scores()
+    proficient_skills <- class_skill_proficiencies(
+      chosen_class(), chosen_background(), chosen_skills(), chosen_species(),
+      chosen_species_skill()
+    )
+    section <- function(label, value, full_width = FALSE) {
       value <- unlist(value, use.names = FALSE)
       value <- value[!is.na(value) & nzchar(trimws(value))]
       if (!length(value)) return(NULL)
       tagList(
         div(
-          class = "overview-section",
+          class = paste("overview-section", if (full_width) "sheet-full-width"),
           h3(paste0(label, ":")),
           if (length(value) == 1L) p(value) else tags$ul(lapply(value, tags$li))
         )
       )
     }
-
+    signed <- function(value) paste0(if (value >= 0) "+" else "", value)
+    max_hp <- level_one_hit_points(chosen_class(), scores, chosen_species(),
+      chosen_subrace())
+    spell_text <- function(spell) {
+      prepared_label <- if (spell %in% chosen_prepared_spells()) " · Prepared" else ""
+      paste0(spell, " — Range: ", spell_range(spell),
+        " · Duration: ", spell_duration(spell),
+        " · Components: ", spell_components(spell), prepared_label)
+    }
+    saving_lines <- vapply(names(ability_scores), function(ability) {
+      paste0(ability, " ", signed(saving_throw_bonus(ability, scores, chosen_class())),
+        if (ability %in% class_rules[[chosen_class()]]$saves) " · proficient" else "")
+    }, character(1))
+    skill_lines <- vapply(proficient_skills, function(skill) {
+      paste0(skill, " (", skill_abilities[[skill]], ") ",
+        signed(skill_bonus(skill, scores, chosen_class(), chosen_background(),
+          chosen_skills(), chosen_expertise(), chosen_species(),
+          chosen_species_skill())),
+        if (skill %in% chosen_expertise()) " · Expertise" else "")
+    }, character(1))
+    attacks <- lapply(unique(c(gear$weapons, "Unarmed Strike")), function(weapon) {
+      attack <- weapon_attack_record(weapon, scores, chosen_class())
+      paste0(attack$name, " — ", signed(attack$bonus), " to hit · ",
+        attack$damage, " · ", attack$properties,
+        if (attack$proficient) "" else " · not proficient")
+    })
+    identity_lines <- vapply(c("pronouns", "age", "height", "eyes", "hair",
+      "appearance", "personality", "ideals", "bonds", "flaws", "backstory",
+      "languages", "notes"), function(field) {
+      value <- details[[field]]
+      if (is.null(value) || !nzchar(trimws(value))) return("")
+      label <- paste0(toupper(substr(field, 1L, 1L)), substring(field, 2L))
+      paste0(label, ": ", value)
+    }, character(1))
+    armour_category <- armour_profiles[[gear$armour]]$proficiency
+    armour_training <- class_armour_training[[chosen_class()]]
+    armour_warning <- if (armour_category != "None" &&
+        !armour_category %in% armour_training) {
+      paste("Not proficient with", tolower(armour_category), "armour.")
+    } else {
+      character()
+    }
+    shield_warning <- if (isTRUE(gear$shield) && !"Shield" %in% armour_training) {
+      "Not proficient with shields."
+    } else {
+      character()
+    }
+    spell_stats <- if (chosen_class() %in% spellcasting_classes) {
+      stats <- spellcasting_stats(chosen_class(), scores)
+      c(
+        paste0("Spellcasting ability: ", stats$ability,
+          " (", signed(stats$modifier), ")"),
+        paste0("Spell attack: ", signed(stats$attack)),
+        paste0("Spell save DC: ", stats$save_dc)
+      )
+    } else {
+      character()
+    }
     tagList(
-      div(class = "overview-name", current_detail("character_name")),
+      div(class = "overview-name", details$character_name),
       p(class = "overview-subtitle", paste(
-        chosen_species(), chosen_class(), "Level 1",
+        chosen_species(), chosen_subrace(), chosen_class(), "Level 1",
         sep = " · "
       )),
-      section("Alignment", current_detail("alignment", "Unspecified")),
-      section("Ability scores", lapply(seq_along(ability_scores), function(i) {
-          id <- unname(ability_scores[[i]])
-          paste0(names(ability_scores)[i], ": ", final_scores()[[id]])
-        })),
+      div(class = "sheet-grid",
+        section("Alignment", details$alignment),
         section("Background", format_background(chosen_background())),
-        section("Background ability increases", paste0(
-          names(chosen_ability_increases()), " +", chosen_ability_increases()
+        section("Ability Scores & Modifiers", lapply(seq_along(ability_scores), function(i) {
+          ability <- names(ability_scores)[[i]]
+          id <- unname(ability_scores[[i]])
+          paste0(ability, " ", scores[[id]], " (", signed(ability_modifier(scores[[id]])), ")")
+        })),
+        section("Combat Stats", c(
+          paste0("Armour Class: ", armour_class(chosen_class(), scores,
+            gear$armour, gear$shield)),
+          paste0("Hit Points: ", gear$current_hp, "/", max_hp),
+          if (gear$temporary_hp > 0) paste0("Temporary HP: ", gear$temporary_hp),
+          paste0("Initiative: ", signed(ability_modifier(scores[["dexterity"]]))),
+          paste0("Size: ", race_size(chosen_species(), chosen_subrace())),
+          paste0("Speed: ", race_walking_speed(chosen_species(), chosen_subrace()), " ft."),
+          paste0("Proficiency Bonus: +", proficiency_bonus()),
+          paste0("Passive Perception: ", 10L + skill_bonus("Perception", scores,
+            chosen_class(), chosen_background(), chosen_skills(),
+            chosen_expertise(), chosen_species(), chosen_species_skill())),
+          paste0("Death Saves: ", gear$death_successes, " successes · ",
+            gear$death_failures, " failures")
         )),
-        section("Skill proficiencies", c(
-          background_rules[[chosen_background()]]$skills,
-          chosen_skills()
+        section("Saving Throws", saving_lines),
+        section("Skills", skill_lines),
+        section("Weapon Attacks", unlist(attacks), full_width = TRUE),
+        section("Armour & Training", c(
+          paste("Worn:", gear$armour),
+          if (armour_category == "None" ||
+              armour_category %in% armour_training) {
+            paste("Class training:", if (armour_category == "None") {
+              "not applicable"
+            } else {
+              paste("proficient with", tolower(armour_category), "armour")
+            })
+          } else {
+            armour_warning
+          },
+          if (gear$shield) "Shield equipped (+2 AC)",
+          if (gear$shield && "Shield" %in% armour_training) {
+            "Proficient with shields."
+          },
+          shield_warning
         )),
-        section("Tool proficiency", background_rules[[chosen_background()]]$tool),
-        section("Origin feat", background_rules[[chosen_background()]]$feat),
-        section("Species traits", species_traits[[chosen_species()]]),
-        section("Level 1 class features", class_rules[[chosen_class()]]$features),
-        section("Saving throw proficiencies", class_rules[[chosen_class()]]$saves),
-        section("Hit points", as.character(level_one_hit_points(
-          chosen_class(), final_scores(), chosen_species()
-        ))),
-        section("Cantrips", if (length(chosen_cantrips())) chosen_cantrips() else "None"),
-        section(if (identical(chosen_class(), "Wizard")) "Spellbook" else "Level 1 spells",
-          if (length(chosen_spells())) chosen_spells() else "None"),
-        section("Level 1 spell slots", if (class_rules[[chosen_class()]]$slots == 0L) {
-          "None"
-        } else if (identical(chosen_class(), "Warlock")) {
-          "1 Pact Magic slot"
+        section("Class Features", class_rules[[chosen_class()]]$features),
+        section("Race Traits", race_trait_summary(chosen_species(),
+          chosen_subrace(), chosen_race_choices())),
+        section("Background Benefits", c(
+          paste0("Skills: ", paste(background_rules[[chosen_background()]]$skills,
+            collapse = ", ")),
+          if (length(chosen_species_skill())) {
+            paste0("Racial skill proficiency: ", chosen_species_skill())
+          },
+          paste0("Tool proficiencies: ",
+            background_tool_summary(chosen_background(), chosen_background_choices())),
+          paste0("Languages: ", if (length(chosen_background_choices()$languages)) {
+            paste(chosen_background_choices()$languages, collapse = ", ")
+          } else {
+            background_rules[[chosen_background()]]$languages
+          }),
+          paste0("Background feature: ", background_rules[[chosen_background()]]$feature)
+        )),
+        section("Background Equipment",
+          background_rules[[chosen_background()]]$equipment,
+          full_width = TRUE),
+        section("Spellcasting", c(
+          spell_stats,
+          if (class_rules[[chosen_class()]]$slots == 0L) "Spell slots: None"
+          else if (identical(chosen_class(), "Warlock")) {
+            paste0("Pact Magic slots: ", gear$spell_slots_remaining, "/",
+              class_rules[[chosen_class()]]$slots)
+          } else {
+            paste0("First-level spell slots: ", gear$spell_slots_remaining, "/",
+              class_rules[[chosen_class()]]$slots)
+          }
+        )),
+        section("Cantrips", if (length(chosen_cantrips())) {
+          vapply(chosen_cantrips(), spell_text, character(1))
         } else {
-          paste(class_rules[[chosen_class()]]$slots, "1st-level spell slots")
-        }),
-        section("Background equipment", background_rules[[chosen_background()]]$equipment),
-        section(
-          chosen_equipment(),
-          unname(equipment_options[[chosen_equipment()]])
-        )
+          "None"
+        }, full_width = TRUE),
+        section(if (!chosen_class() %in% spellcasting_classes) {
+          "Spells"
+        } else if (identical(chosen_class(), "Wizard")) {
+          "Spellbook"
+        } else if (chosen_class() %in% c("Bard", "Sorcerer", "Warlock")) {
+          "Known Spells"
+        } else {
+          "Prepared Spells"
+        },
+          if (length(chosen_spells())) {
+            vapply(chosen_spells(), spell_text, character(1))
+          } else {
+            "None"
+          }, full_width = TRUE),
+        section("Campaign Pack", c(chosen_equipment(),
+          unname(equipment_options[[chosen_equipment()]]))),
+        section("Inventory", gear$inventory, full_width = TRUE),
+        section("Currency", paste(gear$cp, "CP ·", gear$sp, "SP ·",
+          gear$ep, "EP ·", gear$gp, "GP ·", gear$pp, "PP")),
+        section("Character Details", c(
+          identity_lines[nzchar(identity_lines)]
+        ), full_width = TRUE)
+      )
     )
   })
 
@@ -2227,10 +3704,7 @@ server <- function(input, output, session) {
     },
     content = function(file) {
       validate(need(character_is_valid(), "Enter a name and spend no more than 27 points."))
-      details <- list(
-        character_name = current_detail("character_name"),
-        alignment = current_detail("alignment", "Unspecified")
-      )
+      details <- collect_details()
       payload <- character_payload(
         chosen_species(),
         chosen_class(),
@@ -2239,9 +3713,16 @@ server <- function(input, output, session) {
         chosen_ability_increases(),
         details,
         chosen_skills(),
+        chosen_expertise(),
+        chosen_species_skill(),
         chosen_cantrips(),
         chosen_spells(),
-        chosen_equipment()
+        chosen_prepared_spells(),
+        chosen_equipment(),
+        current_gear(),
+        chosen_subrace(),
+        chosen_race_choices(),
+        chosen_background_choices()
       )
       jsonlite::write_json(payload, file, auto_unbox = TRUE, pretty = TRUE)
     }
@@ -2254,14 +3735,13 @@ server <- function(input, output, session) {
     },
     content = function(file) {
       validate(need(character_is_valid(), "Enter a name and spend no more than 27 points."))
-      details <- list(
-        character_name = current_detail("character_name"),
-        alignment = current_detail("alignment", "Unspecified")
-      )
+      details <- collect_details()
       lines <- character_sheet_lines(
         chosen_species(), chosen_class(), chosen_background(), chosen_scores(),
-        chosen_ability_increases(), details, chosen_skills(), chosen_cantrips(),
-        chosen_spells(), chosen_equipment()
+        chosen_ability_increases(), details, chosen_skills(), chosen_expertise(),
+        chosen_species_skill(), chosen_cantrips(),
+        chosen_spells(), chosen_prepared_spells(), chosen_equipment(), current_gear(),
+        chosen_subrace(), chosen_race_choices(), chosen_background_choices()
       )
       writeLines(lines, file, useBytes = TRUE)
     }
