@@ -1048,6 +1048,30 @@ ui <- fluidPage(
     }
     .overview-section ul { list-style: none; padding-left: 0; margin-bottom: 0; }
     .overview-section li { text-align: center; }
+    @media print {
+      @page { margin: 16mm; }
+      body * { visibility: hidden !important; }
+      #character_sheet, #character_sheet * { visibility: visible !important; }
+      #character_sheet {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        color: #171717 !important;
+        font-family: Arial, sans-serif;
+      }
+      #character_sheet .overview-name,
+      #character_sheet .overview-subtitle,
+      #character_sheet .overview-section h3,
+      #character_sheet .overview-section p,
+      #character_sheet .overview-section li {
+        color: #171717 !important;
+      }
+      #character_sheet .overview-section {
+        border-color: #b8b8b8;
+        break-inside: avoid;
+      }
+    }
     .party-save-panel { text-align: center; }
     .party-save-panel .form-group { max-width: 420px; margin: 0 auto 15px; }
     .overview-actions { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; margin-top: 20px; }
@@ -1546,10 +1570,11 @@ character_overview_ui <- function() {
     h2(class = "race-subheading", "The hero you bring to the Blackwood"),
     uiOutput("load_character_status"),
     div(class = "panel-card overview-panel", uiOutput("character_sheet")),
+    uiOutput("download_ui"),
     div(
       class = "panel-card party-save-panel",
-      h3(class = "section-title", "Save for Your Party"),
-      p("Save this character to the DM's private campaign roster and email a copy to yourself."),
+      h3(class = "section-title", "Email a Copy to Your Party"),
+      p("Email a PDF copy of this character sheet to yourself and the DM. This is optional; use Save PDF above to keep a copy on your device."),
       tags$div(
         class = "form-group",
         tags$label(`for` = "player_email", "Your email address"),
@@ -1564,14 +1589,13 @@ character_overview_ui <- function() {
         )
       ),
       p(class = "text-muted",
-        "Your email and character choices are stored in the DM's private campaign roster; your email is also used to send your character sheet."
+        "Your email is used only to send the PDF. Character details are emailed to you and the DM; the app does not save a roster."
       ),
-      actionButton("submit_character", "Save to Party & Email Me",
+      actionButton("submit_character", "Email PDF to Me & the DM",
         class = "btn-primary begin-button"),
       uiOutput("party_save_setup"),
       uiOutput("party_save_status")
     ),
-    uiOutput("download_ui"),
     div(
       class = "overview-actions",
       actionButton("back_to_equipment", "Back to Equipment", class = "btn-default race-back")
@@ -1643,7 +1667,7 @@ server <- function(input, output, session) {
   output$party_save_setup <- renderUI({
     if (nzchar(save_endpoint) && nzchar(save_token)) return(NULL)
     div(class = "text-warning",
-      "Party saving isn't connected yet. The DM must configure the private Google Sheet and Apps Script endpoint."
+      "PDF email isn't connected yet. The DM must configure the email service endpoint."
     )
   })
 
@@ -2045,7 +2069,7 @@ server <- function(input, output, session) {
     }
     if (!nzchar(save_endpoint) || !nzchar(save_token)) {
       party_save_status(list(ok = FALSE,
-        message = "Party saving isn't configured yet. Contact the DM to finish the Google Sheet setup."))
+        message = "PDF email isn't configured yet. Contact the DM to finish the email service setup."))
       return()
     }
 
@@ -2054,11 +2078,6 @@ server <- function(input, output, session) {
       alignment = current_detail("alignment", "Unspecified")
     )
     sheet_lines <- character_sheet_lines(
-      chosen_species(), chosen_class(), chosen_background(), chosen_scores(),
-      chosen_ability_increases(), details, chosen_skills(), chosen_cantrips(),
-      chosen_spells(), chosen_equipment()
-    )
-    character <- character_payload(
       chosen_species(), chosen_class(), chosen_background(), chosen_scores(),
       chosen_ability_increases(), details, chosen_skills(), chosen_cantrips(),
       chosen_spells(), chosen_equipment()
@@ -2076,7 +2095,7 @@ server <- function(input, output, session) {
       token = save_token,
       submission_id = submission_id,
       player_email = email,
-      character = character,
+      character_name = details$character_name,
       character_sheet = paste(sheet_lines, collapse = "\n")
     )
 
@@ -2109,7 +2128,7 @@ server <- function(input, output, session) {
             "The save service could not save this character."), call. = FALSE)
         }
         list(ok = TRUE,
-          message = paste0("Saved for the DM and emailed to ", email, "."))
+          message = paste0("PDF emailed to you (", email, ") and the DM."))
       }, error = function(error) {
         list(ok = FALSE,
           message = paste("Couldn't save the character:", conditionMessage(error)))
@@ -2189,6 +2208,12 @@ server <- function(input, output, session) {
   output$download_ui <- renderUI({
     if (character_is_valid()) {
       tagList(
+        tags$button(
+          type = "button",
+          class = "btn btn-primary",
+          onclick = "window.print()",
+          "Save PDF to your device"
+        ),
         downloadButton("download_sheet", "Download character sheet"),
         downloadButton("download_save", "Save character for later")
       )
