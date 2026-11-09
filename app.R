@@ -29,23 +29,145 @@ field <- function(id, label, placeholder = "") {
 
 ui <- fluidPage(
   tags$head(tags$style(HTML("
-    body { background: #f4f1eb; color: #242323; }
+    :root {
+      color-scheme: dark;
+      --night: #111318;
+      --surface: #1b1e25;
+      --surface-raised: #222630;
+      --border: #343946;
+      --text: #eee9dc;
+      --muted: #aaa394;
+      --gold: #d7b56d;
+      --gold-bright: #f0d18a;
+    }
+    body {
+      background-color: var(--night);
+      background-image: radial-gradient(ellipse at 50% -20%, #34302a 0, transparent 55%);
+      color: var(--text);
+      font-family: 'Segoe UI', sans-serif;
+    }
     .container-fluid { max-width: 1180px; }
-    .app-header { padding: 28px 0 18px; border-bottom: 1px solid #d8d0c3; margin-bottom: 22px; }
-    .app-header h1 { margin: 0 0 6px; font-family: Georgia, serif; }
-    .app-header p { color: #655d52; margin: 0; }
-    .panel-card { background: #fff; border: 1px solid #e1dbd1; border-radius: 8px; padding: 20px; margin-bottom: 18px; }
-    .section-title { font-family: Georgia, serif; margin: 4px 0 16px; }
-    .points-total { font-weight: 700; font-size: 18px; }
-    .sheet-label { color: #655d52; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; margin: 12px 0 2px; }
-    .sheet-value { white-space: pre-wrap; overflow-wrap: anywhere; }
+    .app-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 30px 0 22px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 24px;
+    }
+    .app-header h1 {
+      margin: 0 0 7px;
+      color: var(--gold-bright);
+      font-family: Georgia, serif;
+      font-size: 36px;
+      letter-spacing: .02em;
+    }
+    .app-header p { color: var(--muted); margin: 0; }
+    .header-kicker {
+      color: var(--gold);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      margin-bottom: 7px;
+    }
+    .crest { color: var(--gold); opacity: .9; width: 82px; height: 82px; flex: 0 0 auto; margin-left: 20px; }
+    .panel-card {
+      background: linear-gradient(145deg, #1d2027, #191c22);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, .16);
+      padding: 20px;
+      margin-bottom: 18px;
+    }
+    .section-title {
+      color: var(--gold-bright);
+      font-family: Georgia, serif;
+      margin: 4px 0 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #34312b;
+    }
+    .control-label { color: #d7d0c2; }
+    .help-block, .text-muted { color: var(--muted); }
+    .form-control {
+      background-color: #14171c;
+      border-color: #3a3f49;
+      color: var(--text);
+      border-radius: 6px;
+      box-shadow: none;
+    }
+    .form-control:focus {
+      background-color: #171a20;
+      border-color: var(--gold);
+      color: #fff9eb;
+      box-shadow: 0 0 0 2px rgba(215, 181, 109, .14);
+    }
+    .form-control::placeholder { color: #77766f; }
+    select.form-control option { background: #1b1e25; color: var(--text); }
+    .input-group-addon {
+      background: var(--surface-raised);
+      border-color: #3a3f49;
+      color: var(--gold);
+    }
+    .points-total { font-weight: 700; font-size: 16px; margin-top: 12px; }
+    .text-success { color: #94c9a1; }
+    .text-warning { color: var(--gold-bright); }
+    .text-danger { color: #f08a82; }
+    .sheet-label {
+      color: var(--gold);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      margin: 14px 0 3px;
+    }
+    .sheet-value { white-space: pre-wrap; overflow-wrap: anywhere; color: #e4dfd4; }
+    #character_sheet h2 { color: var(--gold-bright); font-family: Georgia, serif; }
+    #character_sheet ul { padding-left: 20px; color: #e4dfd4; }
+    #character_sheet li { padding: 2px 0; }
+    .btn-default, .btn-primary {
+      background: #4a3b24;
+      border-color: #806539;
+      color: #fff0cc;
+      border-radius: 6px;
+    }
+    .btn-default:hover, .btn-default:focus, .btn-primary:hover, .btn-primary:focus {
+      background: #624d2e;
+      border-color: var(--gold);
+      color: #fff8e8;
+    }
     .ability-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 14px; }
-    @media (max-width: 767px) { .ability-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 767px) {
+      .ability-grid { grid-template-columns: 1fr; }
+      .app-header h1 { font-size: 29px; }
+      .crest { width: 62px; height: 62px; }
+      .panel-card { padding: 16px; }
+    }
   "))),
   div(
     class = "app-header",
-    h1("Adventurer's Ledger"),
-    p("Build a character for your next campaign.")
+    div(
+      div(class = "header-kicker", "Character chronicles"),
+      h1("Adventurer's Ledger"),
+      p("Build a character for your next campaign.")
+    ),
+    tags$svg(
+      class = "crest",
+      viewBox = "0 0 100 100",
+      `aria-hidden` = "true",
+      tags$path(
+        d = "M50 5 L87 20 L83 58 C79 76 65 88 50 96 C35 88 21 76 17 58 L13 20 Z",
+        fill = "none", stroke = "currentColor", `stroke-width` = "2"
+      ),
+      tags$path(
+        d = "M50 16 L77 27 L74 56 C71 69 61 78 50 85 C39 78 29 69 26 56 L23 27 Z",
+        fill = "none", stroke = "currentColor", `stroke-width` = "1", opacity = ".55"
+      ),
+      tags$path(
+        d = "M50 25 L55 43 L72 47 L57 56 L59 73 L50 63 L41 73 L43 56 L28 47 L45 43 Z",
+        fill = "currentColor", opacity = ".9"
+      ),
+      tags$circle(cx = "50", cy = "49", r = "4", fill = "#1b1e25")
+    )
   ),
   sidebarLayout(
     sidebarPanel(
